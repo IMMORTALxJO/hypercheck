@@ -102,7 +102,7 @@ func Probe(filesGlob string, opts string) bool {
 			}
 			result, message := test(filesGlob, files, check.Option)
 			if result {
-				log.Infof("%s['%s'].%s.success: %s", ProbeName, filesGlob, testName, message)
+				log.Debugf("%s['%s'].%s.success: %s", ProbeName, filesGlob, testName, message)
 			} else {
 				log.Errorf("%s['%s'].%s.failed: %s", ProbeName, filesGlob, testName, message)
 				probeResult = false

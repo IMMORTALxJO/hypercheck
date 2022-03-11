@@ -10,9 +10,10 @@ import (
 )
 
 type Check struct {
-	Name   string
-	Option options.Option
-	Tests  []string
+	Name        string
+	Description string
+	Option      options.Option
+	Tests       []string
 }
 
 func OptionsToChecks(opts string, checks map[string]Check) []Check {
