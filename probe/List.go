@@ -43,7 +43,7 @@ func (p *List) Up(input *Input) (bool, string) {
 	if aggregator == "all" {
 		return true, ""
 	}
-	return false, ""
+	return false, "Unknown aggregator"
 }
 
 func (p *List) Add(probe Probe) {

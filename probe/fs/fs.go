@@ -1,12 +1,11 @@
 package fs
 
 import (
-	"log"
 	"path/filepath"
 	"probe/probe"
 )
 
-func GenerateProbe(input string) probe.Probe {
+func GenerateProbe(input string) (probe.Probe, string) {
 	fsSizeProbe := probe.NewList()
 	fsDirProbe := probe.NewList()
 	fsRegularProbe := probe.NewList()
@@ -17,7 +16,7 @@ func GenerateProbe(input string) probe.Probe {
 
 	paths, err := filepath.Glob(input)
 	if err != nil {
-		log.Fatalf("Wrong files glob pattern '%s'", input)
+		return probe.NewMap(), "Wrong files glob pattern"
 	}
 	for _, path := range paths {
 		file := getFileWrapper(path)
@@ -41,5 +40,5 @@ func GenerateProbe(input string) probe.Probe {
 
 	fsProbe.Add("count", probe.NewNumber(uint64(len(paths)), "int"))
 	fsProbe.Add("exists", probe.NewBool(len(paths) > 0))
-	return fsProbe
+	return fsProbe, ""
 }

@@ -7,18 +7,23 @@ import (
 	"gotest.tools/assert"
 )
 
+func getProbe(pattern string) probe.Probe {
+	probe, _ := GenerateProbe(pattern)
+	return probe
+}
+
 func TestFS(t *testing.T) {
-	fsProbe := GenerateProbe("./assets/**")
+	fsProbe := getProbe("./assets/**")
 	assert.Equal(t, fsProbe.GetType(), "Map")
 	assert.Assert(t, probe.GetProbeResult(fsProbe, "count", "", ">", "0"))
 	assert.Assert(t, probe.GetProbeResult(fsProbe, "count", "", "==", "7"))
 	assert.Assert(t, probe.GetProbeResult(fsProbe, "exists", "", "", ""))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/file_1kb"), "size", "", "==", "1Kb"))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/file_*"), "size", "sum", "==", "10Kb"))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/dir_1kb"), "size", "", "==", "1Kb"))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/dir_5kb"), "size", "", "==", "5Kb"))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/deep_1kb"), "size", "", "==", "1Kb"))
-	assert.Assert(t, probe.GetProbeResult(GenerateProbe("./assets/d*"), "size", "sum", "==", "16Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/file_1kb"), "size", "", "==", "1Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/file_*"), "size", "sum", "==", "10Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/dir_1kb"), "size", "", "==", "1Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/dir_5kb"), "size", "", "==", "5Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/deep_1kb"), "size", "", "==", "1Kb"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("./assets/d*"), "size", "sum", "==", "16Kb"))
 
 	// check ANY condition
 	assert.Assert(t, !probe.GetProbeResult(fsProbe, "dir", "", "", ""))

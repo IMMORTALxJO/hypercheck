@@ -7,7 +7,7 @@ type Number struct {
 
 func (p *Number) Up(input *Input) (bool, string) {
 	right, err := p.parser.Parse(input.Value)
-	if err != nil {
+	if err != "" {
 		return false, "Couldn't parse input"
 	}
 	left := p.value

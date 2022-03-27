@@ -51,10 +51,6 @@ func (w *fileWrapper) Stat() *syscall.Stat_t {
 	return w.stat
 }
 
-func (w *fileWrapper) Name() string {
-	return w.Path
-}
-
 func (w *fileWrapper) getUID() uint64 {
 	return uint64(w.Stat().Uid)
 }

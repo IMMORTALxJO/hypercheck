@@ -2,7 +2,7 @@ package http
 
 import "probe/probe"
 
-func GenerateProbe(input string) probe.Probe {
+func GenerateProbe(input string) (probe.Probe, string) {
 	data := getHttpWrapper(input)
 	httpProbe := probe.NewMap()
 	httpProbe.Add("code", probe.NewNumber(data.GetCode(), "int"))
@@ -14,5 +14,5 @@ func GenerateProbe(input string) probe.Probe {
 		headersProbe.Add(probe.NewString(h))
 	}
 	httpProbe.Add("headers", headersProbe)
-	return httpProbe
+	return httpProbe, ""
 }

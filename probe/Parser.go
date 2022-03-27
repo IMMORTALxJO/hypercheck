@@ -8,20 +8,20 @@ import (
 )
 
 type Parser interface {
-	Parse(string) (uint64, error)
+	Parse(string) (uint64, string)
 	GetType() string
 }
 
 type ParserInt struct{}
 
-func (p *ParserInt) Parse(input string) (uint64, error) {
+func (p *ParserInt) Parse(input string) (uint64, string) {
 	parsed, err := strconv.Atoi(input)
 	if err != nil {
-		return 0, err
+		return 0, "Input parse error"
 	}
 	value := uint64(parsed)
 	log.Debugf("ParserInt('%s') => %d", input, value)
-	return value, nil
+	return value, ""
 }
 
 func (p *ParserInt) GetType() string {
@@ -30,14 +30,14 @@ func (p *ParserInt) GetType() string {
 
 type ParserBytes struct{}
 
-func (p *ParserBytes) Parse(input string) (uint64, error) {
+func (p *ParserBytes) Parse(input string) (uint64, string) {
 	parsed, err := bytefmt.ToBytes(input)
 	if err != nil {
-		return 0, err
+		return 0, "Input parse error"
 	}
 	value := uint64(parsed)
 	log.Debugf("ParserBytes('%s') => %d", input, value)
-	return value, nil
+	return value, ""
 }
 
 func (p *ParserBytes) GetType() string {
