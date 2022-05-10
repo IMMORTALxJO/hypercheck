@@ -1,5 +1,11 @@
 package probe
 
+import (
+	"fmt"
+
+	log "github.com/sirupsen/logrus"
+)
+
 type Number struct {
 	value  uint64
 	parser Parser
@@ -8,29 +14,30 @@ type Number struct {
 func (p *Number) Up(input *Input) (bool, string) {
 	right, err := p.parser.Parse(input.Value)
 	if err != "" {
-		return false, "Couldn't parse input"
+		return false, fmt.Sprintf("failed to parse value '%s'", input.ToString())
 	}
-	left := p.value
+	left := p.GetValue()
 	operator := input.Operator
+	log.Debugf("number: check %d %s %d", left, operator, right)
 	if operator == "==" || operator == "=" {
-		return left == right, ""
+		return left == right, fmt.Sprintf("%d == %d", left, right)
 	}
 	if operator == ">" {
-		return left > right, ""
+		return left > right, fmt.Sprintf("%d > %d", left, right)
 	}
 	if operator == ">=" {
-		return left >= right, ""
+		return left >= right, fmt.Sprintf("%d >= %d", left, right)
 	}
 	if operator == "<" {
-		return left < right, ""
+		return left < right, fmt.Sprintf("%d < %d", left, right)
 	}
 	if operator == "<=" {
-		return left <= right, ""
+		return left <= right, fmt.Sprintf("%d <= %d", left, right)
 	}
 	if operator == "!=" {
-		return left != right, ""
+		return left != right, fmt.Sprintf("%d != %d", left, right)
 	}
-	return false, "Unknown operator"
+	return false, fmt.Sprintf("unknown operator '%s'", operator)
 }
 
 func (p *Number) GetType() string {

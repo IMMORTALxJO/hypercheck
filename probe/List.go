@@ -1,5 +1,7 @@
 package probe
 
+import "fmt"
+
 type List struct {
 	value []Probe
 }
@@ -43,7 +45,7 @@ func (p *List) Up(input *Input) (bool, string) {
 	if aggregator == "all" {
 		return true, ""
 	}
-	return false, "Unknown aggregator"
+	return false, fmt.Sprintf("Unknown aggregator '%s'", aggregator)
 }
 
 func (p *List) Add(probe Probe) {

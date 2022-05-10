@@ -1,5 +1,7 @@
 package probe
 
+import "fmt"
+
 type Map struct {
 	value map[string]Probe
 }
@@ -8,7 +10,7 @@ func (p *Map) Up(input *Input) (bool, string) {
 	key := input.Key
 	probe := p.value[key]
 	if probe == nil {
-		return false, "Map key not found"
+		return false, fmt.Sprintf("Unknow check name '%s'", key)
 	}
 	return probe.Up(input)
 }

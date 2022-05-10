@@ -3,6 +3,8 @@ package fs
 import (
 	"path/filepath"
 	"probe/probe"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func GenerateProbe(input string) (probe.Probe, string) {
@@ -40,5 +42,6 @@ func GenerateProbe(input string) (probe.Probe, string) {
 
 	fsProbe.Add("count", probe.NewNumber(uint64(len(paths)), "int"))
 	fsProbe.Add("exists", probe.NewBool(len(paths) > 0))
+	log.Debugf("fs probe initialized for '%s'", input)
 	return fsProbe, ""
 }
