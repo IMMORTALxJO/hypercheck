@@ -13,8 +13,8 @@ type CheckInputs []*probe.Input
 // <key>[:aggregator]<operation><target>,...
 func ParseArguments(input string) CheckInputs {
 	inputs := []*probe.Input{}
-	firstPartReg := re.MustCompile("^\\w{1,}(:\\w{1,})?")
-	lastPartReg := re.MustCompile("[\\d\\w]+$")
+	firstPartReg := re.MustCompile(`^\w{1,}(:\w{1,})?`)
+	lastPartReg := re.MustCompile(`[\d\w]+$`)
 	for id, argument := range strings.Split(input, ",") {
 		log.Debugf("parse argument %d '%s'", id, argument)
 		firstPart := string(firstPartReg.Find([]byte(argument)))

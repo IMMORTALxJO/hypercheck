@@ -10,7 +10,7 @@ func (p *Bool) Up(input *Input) (bool, string) {
 	return p.value, fmt.Sprintf("boolean statement '%s' is %v", input.ToString(), p.value)
 }
 
-func (p *Bool) GetType() string {
+func (*Bool) GetType() string {
 	return "Bool"
 }
 

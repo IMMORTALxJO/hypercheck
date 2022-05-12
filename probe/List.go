@@ -52,7 +52,7 @@ func (p *List) Add(probe Probe) {
 	p.value = append(p.value, probe)
 }
 
-func (p *List) GetType() string {
+func (*List) GetType() string {
 	return "List"
 }
 

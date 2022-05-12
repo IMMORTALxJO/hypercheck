@@ -30,7 +30,7 @@ func (w *httpWrapper) GetContent() string {
 	if !w.GetOnline() {
 		return ""
 	}
-	if w.contentCached == false {
+	if !w.contentCached {
 		log.Debugf("no cache, w.contentCached=%v", w.contentCached)
 		defer w.Resp.Body.Close()
 		body, _ := ioutil.ReadAll(w.Resp.Body)

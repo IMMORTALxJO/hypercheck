@@ -19,7 +19,7 @@ func (p *Map) Add(key string, probe Probe) {
 	p.value[key] = probe
 }
 
-func (p *Map) GetType() string {
+func (*Map) GetType() string {
 	return "Map"
 }
 

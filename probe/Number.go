@@ -40,7 +40,7 @@ func (p *Number) Up(input *Input) (bool, string) {
 	return false, fmt.Sprintf("unknown operator '%s'", operator)
 }
 
-func (p *Number) GetType() string {
+func (*Number) GetType() string {
 	return "Number"
 }
 
