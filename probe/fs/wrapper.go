@@ -14,30 +14,39 @@ var filesCache = map[string]*fileWrapper{}
 
 type fileWrapper struct {
 	Path         string
-	Info         os.FileInfo
+	info         os.FileInfo
 	stat         *syscall.Stat_t
 	statComputed bool
 	size         uint64
 	sizeCounted  bool
 }
 
+func (w *fileWrapper) getInfo() os.FileInfo {
+	if w.info == nil {
+		w.info, _ = os.Stat(w.Path)
+		log.Debugf("fs.info loaded %s", w.Path)
+	}
+	return w.info
+}
+
 func (w *fileWrapper) IsRegular() bool {
-	mode := w.Info.Mode()
+	mode := w.getInfo().Mode()
 	return mode.IsRegular()
 }
 
 func (w *fileWrapper) IsDir() bool {
-	return w.Info.IsDir()
+	return w.getInfo().IsDir()
 }
 
 func (w *fileWrapper) getSize() uint64 {
+	log.Debugf("get size %s", w.Path)
 	if w.sizeCounted {
 		return w.size
 	}
 	if w.IsDir() {
 		w.size = getDirSize(w)
 	} else {
-		w.size = uint64(w.Info.Size())
+		w.size = uint64(w.getInfo().Size())
 	}
 	w.sizeCounted = true
 	return w.size
@@ -47,7 +56,7 @@ func (w *fileWrapper) Stat() *syscall.Stat_t {
 	if w.statComputed {
 		return w.stat
 	}
-	w.stat = w.Info.Sys().(*syscall.Stat_t)
+	w.stat = w.getInfo().Sys().(*syscall.Stat_t)
 	return w.stat
 }
 
@@ -69,10 +78,8 @@ func (w *fileWrapper) getGroupname() string {
 func getFileWrapper(path string) *fileWrapper {
 	_, ok := filesCache[path]
 	if !ok {
-		fileInfo, _ := os.Stat(path)
 		filesCache[path] = &fileWrapper{
 			Path: path,
-			Info: fileInfo,
 		}
 	} else {
 		log.Debugf("got fileWrapper for %s from cache", path)

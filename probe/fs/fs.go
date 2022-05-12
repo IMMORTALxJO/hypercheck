@@ -8,6 +8,10 @@ import (
 )
 
 func GenerateProbe(input string) (probe.Probe, string) {
+	paths, err := filepath.Glob(input)
+	if err != nil {
+		return probe.NewMap(), "Wrong files glob pattern"
+	}
 	fsSizeProbe := probe.NewList()
 	fsDirProbe := probe.NewList()
 	fsRegularProbe := probe.NewList()
@@ -16,20 +20,29 @@ func GenerateProbe(input string) (probe.Probe, string) {
 	fsGidProbe := probe.NewList()
 	fsGroupProbe := probe.NewList()
 
-	paths, err := filepath.Glob(input)
-	if err != nil {
-		return probe.NewMap(), "Wrong files glob pattern"
-	}
 	for _, path := range paths {
 		file := getFileWrapper(path)
-		size := file.getSize()
-		fsSizeProbe.Add(probe.NewNumber(size, "bytes"))
-		fsDirProbe.Add(probe.NewBool(file.IsDir()))
-		fsRegularProbe.Add(probe.NewBool(file.IsRegular()))
-		fsUidProbe.Add(probe.NewNumber(file.getUID(), "int"))
-		fsGidProbe.Add(probe.NewNumber(file.getGID(), "int"))
-		fsGroupProbe.Add(probe.NewString(file.getGroupname()))
-		fsUserProbe.Add(probe.NewString(file.getUsername()))
+		fsSizeProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewNumber(file.getSize(), "bytes")
+		}))
+		fsDirProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewBool(file.IsDir())
+		}))
+		fsRegularProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewBool(file.IsRegular())
+		}))
+		fsUidProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewNumber(file.getUID(), "int")
+		}))
+		fsGidProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewNumber(file.getGID(), "int")
+		}))
+		fsGroupProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewString(file.getGroupname())
+		}))
+		fsUserProbe.Add(probe.NewGenerator(func() probe.Probe {
+			return probe.NewString(file.getUsername())
+		}))
 	}
 	fsProbe := probe.NewMap()
 	fsProbe.Add("size", fsSizeProbe)
