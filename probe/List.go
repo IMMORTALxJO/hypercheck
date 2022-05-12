@@ -38,7 +38,7 @@ func (p *List) Up(input *Input) (bool, string) {
 		probe := NewNumber(sum, parserType)
 		return probe.Up(input)
 	}
-	for _, probe := range p.value {
+	for _, probe := range p.GetValue() {
 		result, msg := probe.Up(input)
 		if result && aggregator == "any" {
 			return true, msg

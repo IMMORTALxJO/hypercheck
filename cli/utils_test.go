@@ -27,4 +27,5 @@ func TestUtilsParseArguments(t *testing.T) {
 	check(t, "size>10Mb", 1, 0, "size", "", ">", "10Mb")
 	check(t, "size:sum>10Mb,count>10", 2, 0, "size", "sum", ">", "10Mb")
 	check(t, "size:sum>10Mb,count>10", 2, 1, "count", "", ">", "10")
+	check(t, "ip==1.2.3.4", 1, 0, "ip", "", "==", "1.2.3.4")
 }

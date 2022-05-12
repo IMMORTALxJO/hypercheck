@@ -14,7 +14,7 @@ type CheckInputs []*probe.Input
 func ParseArguments(input string) CheckInputs {
 	inputs := []*probe.Input{}
 	firstPartReg := re.MustCompile(`^\w{1,}(:\w{1,})?`)
-	lastPartReg := re.MustCompile(`[\d\w]+$`)
+	lastPartReg := re.MustCompile(`[\d\w\.\-]+$`)
 	for id, argument := range strings.Split(input, ",") {
 		log.Debugf("parse argument %d '%s'", id, argument)
 		firstPart := string(firstPartReg.Find([]byte(argument)))
