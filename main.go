@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"probe/cli"
+	dnsProbe "probe/probe/dns"
 	fsProbe "probe/probe/fs"
 	httpProbe "probe/probe/http"
 	tcpProbe "probe/probe/tcp"
@@ -11,7 +12,6 @@ import (
 )
 
 func main() {
-	// log.SetLevel(log.DebugLevel)
 	globalResult := true
 	if len(os.Args) > 0 && (len(os.Args)-1)%3 != 0 {
 		log.Errorf("Wrong number of attributes %d", len(os.Args))
@@ -38,6 +38,12 @@ func main() {
 			}
 		case "--tcp":
 			probe, err = tcpProbe.GenerateProbe(target)
+			if err != "" {
+				log.Error(err)
+				os.Exit(1)
+			}
+		case "--dns":
+			probe, err = dnsProbe.GenerateProbe(target)
 			if err != "" {
 				log.Error(err)
 				os.Exit(1)

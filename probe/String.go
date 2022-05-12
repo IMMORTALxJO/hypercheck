@@ -23,10 +23,10 @@ func (p *String) Up(input *Input) (bool, string) {
 
 	log.Debugf("string: check %s %s %s", left, operator, right)
 	if operator == "==" || operator == "=" {
-		return left == right, fmt.Sprintf("must be equal to '%s'", right)
+		return left == right, fmt.Sprintf("'%s' must be equal to '%s'", left, right)
 	}
 	if operator == "!=" {
-		return left != right, fmt.Sprintf("must not be equal to '%s'", right)
+		return left != right, fmt.Sprintf("'%s' must not be equal to '%s'", left, right)
 	}
 	if operator == "~" {
 		return strings.Contains(left, right), fmt.Sprintf("must contain substring '%s'", right)

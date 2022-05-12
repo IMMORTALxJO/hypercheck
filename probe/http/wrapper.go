@@ -16,10 +16,6 @@ type httpWrapper struct {
 }
 
 func (w *httpWrapper) getResp() *http.Response {
-	if w.resp == nil {
-		w.load()
-		log.Debugf("http.resp loaded %s", w.Url)
-	}
 	return w.resp
 }
 
