@@ -14,23 +14,22 @@ type Parser interface {
 
 type ParserInt struct{}
 
-func (p *ParserInt) Parse(input string) (uint64, string) {
-	parsed, err := strconv.Atoi(input)
+func (*ParserInt) Parse(input string) (uint64, string) {
+	value, err := strconv.ParseUint(input, 10, 64)
 	if err != nil {
 		return 0, "Input parse error"
 	}
-	value := uint64(parsed)
 	log.Debugf("ParserInt('%s') => %d", input, value)
 	return value, ""
 }
 
-func (p *ParserInt) GetType() string {
+func (*ParserInt) GetType() string {
 	return "int"
 }
 
 type ParserBytes struct{}
 
-func (p *ParserBytes) Parse(input string) (uint64, string) {
+func (*ParserBytes) Parse(input string) (uint64, string) {
 	parsed, err := bytefmt.ToBytes(input)
 	if err != nil {
 		return 0, "Input parse error"
@@ -40,6 +39,6 @@ func (p *ParserBytes) Parse(input string) (uint64, string) {
 	return value, ""
 }
 
-func (p *ParserBytes) GetType() string {
+func (*ParserBytes) GetType() string {
 	return "bytes"
 }
