@@ -2,6 +2,7 @@ package probe
 
 import (
 	"strconv"
+	"time"
 
 	"code.cloudfoundry.org/bytefmt"
 	log "github.com/sirupsen/logrus"
@@ -41,4 +42,20 @@ func (*ParserBytes) Parse(input string) (uint64, string) {
 
 func (*ParserBytes) GetType() string {
 	return "bytes"
+}
+
+type ParserDuration struct{}
+
+func (*ParserDuration) Parse(input string) (uint64, string) {
+	parsed, err := time.ParseDuration(input)
+	if err != nil {
+		return 0, "Input parse error"
+	}
+	value := uint64(parsed)
+	log.Debugf("ParserDuration('%s') => %d", input, value)
+	return value, ""
+}
+
+func (*ParserDuration) GetType() string {
+	return "duration"
 }
