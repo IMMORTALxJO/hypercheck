@@ -54,9 +54,12 @@ func (p *Number) GetParserType() string {
 
 func NewNumber(value uint64, parserName string) *Number {
 	var parser Parser
-	if parserName == "bytes" {
+	switch parserName {
+	case "bytes":
 		parser = &ParserBytes{}
-	} else {
+	case "duration":
+		parser = &ParserDuration{}
+	default:
 		parser = &ParserInt{}
 	}
 	return &Number{

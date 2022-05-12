@@ -15,7 +15,7 @@ func GenerateProbe(input string) (probe.Probe, string) {
 		return probe.NewBool(data.GetOnline())
 	}))
 	httpProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetOffline())
+		return probe.NewBool(!data.GetOnline())
 	}))
 	httpProbe.Add("headers", probe.NewGenerator(func() probe.Probe {
 		headersProbe := probe.NewList()

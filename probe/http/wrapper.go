@@ -46,10 +46,6 @@ func (w *httpWrapper) GetOnline() bool {
 	return w.getError() == nil
 }
 
-func (w *httpWrapper) GetOffline() bool {
-	return w.getError() != nil
-}
-
 func (w *httpWrapper) GetContent() string {
 	if !w.GetOnline() {
 		return ""

@@ -5,6 +5,7 @@ import (
 	"probe/cli"
 	fsProbe "probe/probe/fs"
 	httpProbe "probe/probe/http"
+	tcpProbe "probe/probe/tcp"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -35,6 +36,13 @@ func main() {
 				log.Error(err)
 				os.Exit(1)
 			}
+		case "--tcp":
+			probe, err = tcpProbe.GenerateProbe(target)
+			if err != "" {
+				log.Error(err)
+				os.Exit(1)
+			}
+
 		default:
 			log.Errorf("Unknown probe '%s'", cliArg)
 			os.Exit(1)
