@@ -51,7 +51,7 @@ func (p *String) Up(input *Input) (bool, string) {
 	return false, fmt.Sprintf("unknown operator '%s'", operator)
 }
 
-func (p *String) GetType() string {
+func (*String) GetType() string {
 	return "String"
 }
 

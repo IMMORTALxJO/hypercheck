@@ -41,7 +41,7 @@ func main() {
 		}
 		for _, probeInput := range cli.ParseArguments(os.Args[i+1]) {
 			result, msg := probe.Up(probeInput)
-			if result == true {
+			if result {
 				log.Infof("%s %s", target, probeInput.ToString())
 			} else {
 				log.Errorf("%s %s", target, msg)
@@ -50,10 +50,9 @@ func main() {
 		}
 		i += 2
 	}
-	if globalResult == false {
+	if !globalResult {
 		log.Error("probes failed")
 		os.Exit(1)
-	} else {
-		log.Info("probes succeed")
 	}
+	log.Info("probes succeed")
 }
