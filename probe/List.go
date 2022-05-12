@@ -1,6 +1,8 @@
 package probe
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type List struct {
 	value []Probe
@@ -12,13 +14,16 @@ func (p *List) Up(input *Input) (bool, string) {
 		aggregator = "all"
 	}
 	if aggregator == "count" {
-		probe := NewNumber(uint64(len(p.value)), "int")
+		probe := NewNumber(uint64(len(p.GetValue())), "int")
 		return probe.Up(input)
 	}
 	if aggregator == "sum" {
 		sum := uint64(0)
 		parserType := ""
-		for _, probe := range p.value {
+		for _, probe := range p.GetValue() {
+			if probe.GetType() == "Generator" {
+				probe = probe.(*Generator).GetValue()
+			}
 			if probe.GetType() != "Number" {
 				return false, "Sum aggregation is for Numbers only"
 			}
@@ -54,6 +59,10 @@ func (p *List) Add(probe Probe) {
 
 func (*List) GetType() string {
 	return "List"
+}
+
+func (p *List) GetValue() []Probe {
+	return p.value
 }
 
 func NewList() *List {

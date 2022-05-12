@@ -9,21 +9,45 @@ import (
 
 type httpWrapper struct {
 	Url           string
-	Resp          *http.Response
-	Err           error
 	content       string
 	contentCached bool
+	resp          *http.Response
+	err           error
+}
+
+func (w *httpWrapper) getResp() *http.Response {
+	if w.resp == nil {
+		w.load()
+		log.Debugf("http.resp loaded %s", w.Url)
+	}
+	return w.resp
+}
+
+func (w *httpWrapper) getError() error {
+	if w.resp == nil {
+		w.load()
+	}
+	return w.err
+}
+
+func (w *httpWrapper) load() {
+	w.resp, w.err = http.Get(w.Url)
+	log.Debugf("http.resp loaded %s", w.Url)
 }
 
 func (w *httpWrapper) GetCode() uint64 {
 	if !w.GetOnline() {
 		return uint64(0)
 	}
-	return uint64(w.Resp.StatusCode)
+	return uint64(w.getResp().StatusCode)
 }
 
 func (w *httpWrapper) GetOnline() bool {
-	return w.Err == nil
+	return w.getError() == nil
+}
+
+func (w *httpWrapper) GetOffline() bool {
+	return w.getError() != nil
 }
 
 func (w *httpWrapper) GetContent() string {
@@ -32,8 +56,8 @@ func (w *httpWrapper) GetContent() string {
 	}
 	if !w.contentCached {
 		log.Debugf("no cache, w.contentCached=%v", w.contentCached)
-		defer w.Resp.Body.Close()
-		body, _ := ioutil.ReadAll(w.Resp.Body)
+		defer w.getResp().Body.Close()
+		body, _ := ioutil.ReadAll(w.getResp().Body)
 		w.content = string(body)
 		w.contentCached = true
 	}
@@ -46,7 +70,7 @@ func (w *httpWrapper) GetHeaders() []string {
 	if !w.GetOnline() {
 		return headers
 	}
-	for h, v := range w.Resp.Header {
+	for h, v := range w.getResp().Header {
 		headers = append(headers, h+": "+v[0])
 	}
 	log.Debugf("headers: '%s'", headers)
@@ -58,11 +82,8 @@ var httpCache = map[string]*httpWrapper{}
 func getHttpWrapper(url string) *httpWrapper {
 	_, ok := httpCache[url]
 	if !ok {
-		resp, err := http.Get(url)
 		httpCache[url] = &httpWrapper{
-			Url:  url,
-			Resp: resp,
-			Err:  err,
+			Url: url,
 		}
 	} else {
 		log.Debugf("got httpWrapper for %s from cache", url)
