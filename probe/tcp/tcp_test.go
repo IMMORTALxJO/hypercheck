@@ -13,6 +13,16 @@ func getProbe(pattern string) probe.Probe {
 }
 
 func TestTcp(t *testing.T) {
-	assert.Assert(t, probe.GetProbeResult(getProbe("8.8.8.8:53"), "online", "", "", ""))
-	assert.Assert(t, probe.GetProbeResult(getProbe("8.8.8.8:77777"), "offline", "", "", ""))
+	// listen ports
+	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:8080"), "online", "", "", ""))
+	assert.Assert(t, !probe.GetProbeResult(getProbe("127.0.0.1:8080"), "offline", "", "", ""))
+
+	// not listen ports
+	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:8081"), "offline", "", "", ""))
+	assert.Assert(t, !probe.GetProbeResult(getProbe("127.0.0.1:8081"), "online", "", "", ""))
+
+	// bad format ports
+	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:123456"), "offline", "", "", ""))
+	assert.Assert(t, !probe.GetProbeResult(getProbe("127.0.0.1:123456"), "online", "", "", ""))
+
 }

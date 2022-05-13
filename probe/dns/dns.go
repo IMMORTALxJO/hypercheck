@@ -5,6 +5,12 @@ import "probe/probe"
 func GenerateProbe(input string) (probe.Probe, string) {
 	data := getDnsWrapper(input)
 	dnsProbe := probe.NewMap()
+	dnsProbe.Add("online", probe.NewGenerator(func() probe.Probe {
+		return probe.NewBool(data.GetOnline())
+	}))
+	dnsProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
+		return probe.NewBool(!data.GetOnline())
+	}))
 	dnsProbe.Add("A", probe.NewGenerator(func() probe.Probe {
 		records := probe.NewList()
 		for _, ip := range data.GetA() {
