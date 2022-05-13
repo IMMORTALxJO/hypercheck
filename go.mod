@@ -9,6 +9,7 @@ require (
 )
 
 require (
+	github.com/gomodule/redigo v1.8.8 // indirect
 	github.com/google/go-cmp v0.5.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/sys v0.0.0-20210423082822-04245dca01da // indirect

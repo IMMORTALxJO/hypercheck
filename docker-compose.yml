@@ -1,0 +1,12 @@
+---
+version: '3'
+services:
+  # check http & tcp port
+  nginx:
+    image: nginx:1.16.0-alpine
+    ports:
+      - "8080:80"
+  redis:
+    image: redis:7.0.0
+    ports:
+      - "6379:6379"

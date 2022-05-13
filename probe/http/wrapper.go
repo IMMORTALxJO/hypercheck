@@ -39,7 +39,11 @@ func (w *httpWrapper) GetCode() uint64 {
 }
 
 func (w *httpWrapper) GetOnline() bool {
-	return w.getError() == nil
+	err := w.getError()
+	if err != nil {
+		log.Error(err)
+	}
+	return err == nil
 }
 
 func (w *httpWrapper) GetContent() string {
@@ -49,7 +53,10 @@ func (w *httpWrapper) GetContent() string {
 	if !w.contentCached {
 		log.Debugf("no cache, w.contentCached=%v", w.contentCached)
 		defer w.getResp().Body.Close()
-		body, _ := ioutil.ReadAll(w.getResp().Body)
+		body, err := ioutil.ReadAll(w.getResp().Body)
+		if err != nil {
+			log.Error(err)
+		}
 		w.content = string(body)
 		w.contentCached = true
 	}

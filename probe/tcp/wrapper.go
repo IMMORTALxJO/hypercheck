@@ -18,6 +18,7 @@ func (w *tcpWrapper) GetOnline() bool {
 	conn, err := netd.Dial("tcp", w.Address)
 	w.latency = uint64(time.Now().UnixNano() - startTime)
 	if err != nil {
+		log.Error(err)
 		return false
 	}
 	defer conn.Close()
