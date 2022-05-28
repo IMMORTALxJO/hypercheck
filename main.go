@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"probe/cli"
+	dbProbe "probe/probe/db"
 	dnsProbe "probe/probe/dns"
 	fsProbe "probe/probe/fs"
 	httpProbe "probe/probe/http"
@@ -36,6 +37,8 @@ func main() {
 			probe, err = dnsProbe.GenerateProbe(target)
 		case "--redis":
 			probe, err = redisProbe.GenerateProbe(target)
+		case "--db":
+			probe, err = dbProbe.GenerateProbe(target)
 		default:
 			log.Errorf("Unknown probe '%s'", cliArg)
 			os.Exit(1)
