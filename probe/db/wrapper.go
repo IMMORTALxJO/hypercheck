@@ -59,7 +59,8 @@ func (w *dbWrapper) load() {
 	w.conn, w.err = sql.Open(w.getScheme(), w.composeAddress())
 	if w.err == nil {
 		ctxBG := context.Background()
-		ctxConnTimeout, _ := context.WithTimeout(ctxBG, 1*time.Second)
+		ctxConnTimeout, cancel := context.WithTimeout(ctxBG, 1*time.Second)
+		defer cancel()
 		w.err = w.conn.PingContext(ctxConnTimeout)
 	}
 	log.Debugf("db.conn loaded %s", w.Address)
