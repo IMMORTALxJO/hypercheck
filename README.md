@@ -9,3 +9,6 @@ Supported checks:
 - file system
 - dns
 - redis
+- db
+  - mysql
+  - postgres
