@@ -1,7 +1,7 @@
 package http
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	log "github.com/sirupsen/logrus"
@@ -53,7 +53,7 @@ func (w *httpWrapper) GetContent() string {
 	if !w.contentCached {
 		log.Debugf("no cache, w.contentCached=%v", w.contentCached)
 		defer w.getResp().Body.Close()
-		body, err := ioutil.ReadAll(w.getResp().Body)
+		body, err := io.ReadAll(w.getResp().Body)
 		if err != nil {
 			log.Error(err)
 		}
