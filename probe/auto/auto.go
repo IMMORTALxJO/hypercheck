@@ -11,7 +11,7 @@ import (
 	schemeDetector "github.com/IMMORTALxJO/scheme-detector"
 )
 
-func GenerateProbe(input string) (probe.Probe, string) {
+func GenerateProbe() (probe.Probe, string) {
 	autoProbe := probe.NewList()
 	for _, scheme := range schemeDetector.FromEnv() {
 		if scheme.IsDNSName() {

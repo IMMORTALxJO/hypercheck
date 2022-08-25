@@ -19,8 +19,7 @@ func (w *redisWrapper) GetPing() bool {
 		log.Error(err)
 		return false
 	}
-	var answer interface{}
-	answer, err = redis.DoWithTimeout(conn, time.Second, "ping")
+	answer, err := redis.DoWithTimeout(conn, time.Second, "ping")
 	if answer != "PONG" {
 		log.Errorf("redis %s ping answer is not PONG", w.Address)
 		return false
