@@ -7,7 +7,7 @@ type Parametrized struct {
 	input *Input
 }
 
-func (p *Parametrized) Up(input *Input) (bool, string) {
+func (p *Parametrized) Up(_ *Input) (bool, string) {
 	if p.probe.GetType() == GeneratorType {
 		return p.probe.(*Generator).Up(p.input)
 	}
