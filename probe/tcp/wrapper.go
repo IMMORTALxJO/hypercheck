@@ -14,9 +14,9 @@ type tcpWrapper struct {
 
 func (w *tcpWrapper) GetOnline() bool {
 	netd := net.Dialer{Timeout: time.Duration(1) * time.Second}
-	startTime := time.Now().UnixNano()
+	startTime := time.Now().Unix()
 	conn, err := netd.Dial("tcp", w.Address)
-	w.latency = uint64(time.Now().UnixNano() - startTime)
+	w.latency = uint64(time.Now().Unix() - startTime)
 	if err != nil {
 		log.Error(err)
 		return false

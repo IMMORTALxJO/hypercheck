@@ -4,6 +4,8 @@ import (
 	"fmt"
 )
 
+const ListType = "List"
+
 type List struct {
 	value []Probe
 }
@@ -21,10 +23,13 @@ func (p *List) Up(input *Input) (bool, string) {
 		sum := uint64(0)
 		parserType := ""
 		for _, probe := range p.GetValue() {
-			if probe.GetType() == "Generator" {
+			if probe.GetType() == GeneratorType {
 				probe = probe.(*Generator).GetValue()
 			}
-			if probe.GetType() != "Number" {
+			if probe.GetType() == ParametrizedType {
+				probe = probe.(*Parametrized).GetValue()
+			}
+			if probe.GetType() != NumberType {
 				return false, "Sum aggregation is for Numbers only"
 			}
 			sum = sum + probe.(*Number).GetValue()
@@ -58,7 +63,7 @@ func (p *List) Add(probe Probe) {
 }
 
 func (*List) GetType() string {
-	return "List"
+	return ListType
 }
 
 func (p *List) GetValue() []Probe {

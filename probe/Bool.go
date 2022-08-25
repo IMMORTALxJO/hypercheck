@@ -2,6 +2,8 @@ package probe
 
 import "fmt"
 
+const BoolType = "Bool"
+
 type Bool struct {
 	value bool
 }
@@ -11,7 +13,7 @@ func (p *Bool) Up(input *Input) (bool, string) {
 }
 
 func (*Bool) GetType() string {
-	return "Bool"
+	return BoolType
 }
 
 func (p *Bool) GetValue() bool {

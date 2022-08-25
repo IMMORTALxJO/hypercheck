@@ -8,7 +8,7 @@ import (
 
 func TestMap(t *testing.T) {
 	probe := NewMap()
-	assert.Equal(t, probe.GetType(), "Map")
+	assert.Equal(t, probe.GetType(), MapType)
 
 	probeNumbersList := NewList()
 	probe.Add("number", NewNumber(2, "int"))

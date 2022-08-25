@@ -4,6 +4,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const GeneratorType = "Generator"
+
 type ProbeGenerator func() Probe
 
 type Generator struct {
@@ -25,7 +27,7 @@ func (p *Generator) GetValue() Probe {
 }
 
 func (*Generator) GetType() string {
-	return "Generator"
+	return GeneratorType
 }
 
 func NewGenerator(value ProbeGenerator) *Generator {

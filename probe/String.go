@@ -8,6 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const StringType = "String"
+
 type String struct {
 	value string
 }
@@ -52,7 +54,7 @@ func (p *String) Up(input *Input) (bool, string) {
 }
 
 func (*String) GetType() string {
-	return "String"
+	return StringType
 }
 
 func (p *String) GetValue() string {
