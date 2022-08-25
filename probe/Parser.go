@@ -51,7 +51,7 @@ func (*ParserDuration) Parse(input string) (uint64, string) {
 	if err != nil {
 		return 0, "Input parse error"
 	}
-	value := uint64(parsed)
+	value := uint64(parsed.Seconds())
 	log.Debugf("ParserDuration('%s') => %d", input, value)
 	return value, ""
 }

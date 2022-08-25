@@ -36,13 +36,6 @@ func (w *dbWrapper) getError() error {
 	return w.err
 }
 
-func (w *dbWrapper) getConn() *sql.DB {
-	if w.conn == nil {
-		w.load()
-	}
-	return w.conn
-}
-
 func (w *dbWrapper) getScheme() string {
 	w.parsed, w.err = url.Parse(w.Address)
 	return w.parsed.Scheme

@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"probe/cli"
+	autoProbe "probe/probe/auto"
 	dbProbe "probe/probe/db"
 	dnsProbe "probe/probe/dns"
 	fsProbe "probe/probe/fs"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	// log.SetLevel(log.DebugLevel)
+	log.SetLevel(log.InfoLevel)
 	globalResult := true
 	if len(os.Args) > 0 && (len(os.Args)-1)%3 != 0 {
 		log.Errorf("Wrong number of attributes %d", len(os.Args))
@@ -39,6 +40,8 @@ func main() {
 			probe, err = redisProbe.GenerateProbe(target)
 		case "--db":
 			probe, err = dbProbe.GenerateProbe(target)
+		case "--auto":
+			probe, err = autoProbe.GenerateProbe()
 		default:
 			log.Errorf("Unknown probe '%s'", cliArg)
 			os.Exit(1)

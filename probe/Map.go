@@ -2,6 +2,8 @@ package probe
 
 import "fmt"
 
+const MapType = "Map"
+
 type Map struct {
 	value map[string]Probe
 }
@@ -20,7 +22,7 @@ func (p *Map) Add(key string, probe Probe) {
 }
 
 func (*Map) GetType() string {
-	return "Map"
+	return MapType
 }
 
 func NewMap() *Map {

@@ -13,42 +13,25 @@ type redisWrapper struct {
 	err     error
 }
 
-func (w *redisWrapper) GetOnline() bool {
-	err := w.getError()
-	if err != nil {
-		log.Error(err)
-	}
-	return err == nil
-}
-
 func (w *redisWrapper) GetPing() bool {
-	err := w.getError()
-	var answer interface{}
-	if err == nil {
-		answer, err = redis.DoWithTimeout(w.getConn(), time.Second, "ping")
-		if answer != "PONG" {
-			log.Errorf("redis %s ping answer is not PONG", w.Address)
-			return false
-		}
-	}
+	conn, err := w.getConn()
 	if err != nil {
 		log.Error(err)
+		return false
 	}
-	return err == nil
+	answer, err := redis.DoWithTimeout(conn, time.Second, "ping")
+	if answer != "PONG" {
+		log.Errorf("redis %s ping answer is not PONG", w.Address)
+		return false
+	}
+	return true
 }
 
-func (w *redisWrapper) getError() error {
+func (w *redisWrapper) getConn() (redis.Conn, error) {
 	if w.conn == nil {
 		w.load()
 	}
-	return w.err
-}
-
-func (w *redisWrapper) getConn() redis.Conn {
-	if w.conn == nil {
-		w.load()
-	}
-	return w.conn
+	return w.conn, w.err
 }
 
 func (w *redisWrapper) load() {

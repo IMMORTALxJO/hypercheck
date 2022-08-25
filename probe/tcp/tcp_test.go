@@ -15,6 +15,8 @@ func getProbe(pattern string) probe.Probe {
 func TestTcp(t *testing.T) {
 	// listen ports
 	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:8080"), "online", "", "", ""))
+	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:8080"), "latency", "", ">=", "0"))
+	assert.Assert(t, probe.GetProbeResult(getProbe("127.0.0.1:8080"), "latency", "", "<", "1h"))
 	assert.Assert(t, !probe.GetProbeResult(getProbe("127.0.0.1:8080"), "offline", "", "", ""))
 
 	// not listen ports

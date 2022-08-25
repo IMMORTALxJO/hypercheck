@@ -9,7 +9,7 @@ import (
 func TestGenerator(t *testing.T) {
 	assert.Equal(t, NewGenerator(func() Probe {
 		return NewNumber(1, "int")
-	}).GetType(), "Generator")
+	}).GetType(), GeneratorType)
 	assert.Assert(t, GetProbeResult(NewGenerator(func() Probe {
 		return NewNumber(1, "int")
 	}), "", "", ">", "0"))

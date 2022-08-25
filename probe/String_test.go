@@ -8,7 +8,7 @@ import (
 
 func TestString(t *testing.T) {
 	probe := NewString("teststring")
-	assert.Equal(t, probe.GetType(), "String")
+	assert.Equal(t, probe.GetType(), StringType)
 	assert.Assert(t, GetProbeResult(probe, "", "", "==", "teststring"))
 	assert.Assert(t, GetProbeResult(probe, "", "", "!=", "abasd"))
 	assert.Assert(t, GetProbeResult(probe, "", "", "~", "tst"))

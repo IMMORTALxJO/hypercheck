@@ -6,6 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+const NumberType = "Number"
+
 type Number struct {
 	value  uint64
 	parser Parser
@@ -41,7 +43,7 @@ func (p *Number) Up(input *Input) (bool, string) {
 }
 
 func (*Number) GetType() string {
-	return "Number"
+	return NumberType
 }
 
 func (p *Number) GetValue() uint64 {

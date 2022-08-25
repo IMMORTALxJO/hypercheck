@@ -9,7 +9,7 @@ import (
 func TestBool(t *testing.T) {
 	probeTrue := NewBool(true)
 	probeFalse := NewBool(false)
-	assert.Equal(t, probeTrue.GetType(), "Bool")
+	assert.Equal(t, probeTrue.GetType(), BoolType)
 	assert.Assert(t, GetProbeResult(probeTrue, "", "", "", ""))
 	assert.Assert(t, !GetProbeResult(probeFalse, "", "", "", ""))
 }
