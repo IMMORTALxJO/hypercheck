@@ -6,10 +6,12 @@ services:
     image: nginx:1.16.0-alpine
     ports:
       - "8080:80"
+  # check redis
   redis:
     image: redis:7.0.0
     ports:
       - "6379:6379"
+  # check postgres
   postgres:
     image: postgres:14.2
     ports:
@@ -17,6 +19,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+  # check mysql
   mysql:
     image: mysql:8.0.29
     ports:
