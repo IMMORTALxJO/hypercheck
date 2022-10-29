@@ -1,18 +1,20 @@
 package tcp
 
-import "probe/probe"
+import "hypercheck/probe/types"
 
-func GenerateProbe(input string) (probe.Probe, string) {
+const Name = "TCP"
+
+func GenerateProbe(input string) (types.Probe, string) {
 	data := getTcpWrapper(input)
-	tcpProbe := probe.NewMap()
-	tcpProbe.Add("online", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetOnline())
+	tcpProbe := types.NewMap("Check tcp port")
+	tcpProbe.Add("online", types.NewGenerator("is reachible", types.BoolType, func() types.Probe {
+		return types.NewBool("", data.GetOnline())
 	}))
-	tcpProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(!data.GetOnline())
+	tcpProbe.Add("offline", types.NewGenerator("is unreachible", types.BoolType, func() types.Probe {
+		return types.NewBool("", !data.GetOnline())
 	}))
-	tcpProbe.Add("latency", probe.NewGenerator(func() probe.Probe {
-		return probe.NewNumber(data.GetLatency(), "duration")
+	tcpProbe.Add("latency", types.NewGenerator("duration", types.NumberType, func() types.Probe {
+		return types.NewNumber("", data.GetLatency(), "duration")
 	}))
 	return tcpProbe, ""
 }

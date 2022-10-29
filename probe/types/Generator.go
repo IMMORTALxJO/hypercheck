@@ -1,6 +1,8 @@
-package probe
+package types
 
 import (
+	"fmt"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -9,8 +11,10 @@ const GeneratorType = "Generator"
 type ProbeGenerator func() Probe
 
 type Generator struct {
-	function ProbeGenerator
-	value    Probe
+	description   string
+	generatedType string
+	function      ProbeGenerator
+	value         Probe
 }
 
 func (p *Generator) Up(input *Input) (bool, string) {
@@ -30,8 +34,18 @@ func (*Generator) GetType() string {
 	return GeneratorType
 }
 
-func NewGenerator(value ProbeGenerator) *Generator {
+func (p *Generator) GetGeneratedType() string {
+	return p.generatedType
+}
+
+func (p *Generator) GetDescription() string {
+	return fmt.Sprintf("%s ( %s )", p.description, p.GetGeneratedType())
+}
+
+func NewGenerator(description string, generatedType string, value ProbeGenerator) *Generator {
 	return &Generator{
-		function: value,
+		generatedType: generatedType,
+		description:   description,
+		function:      value,
 	}
 }

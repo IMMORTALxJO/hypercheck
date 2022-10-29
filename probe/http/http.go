@@ -1,26 +1,31 @@
 package http
 
-import "probe/probe"
+import (
+	"hypercheck/probe/types"
+	probe "hypercheck/probe/types"
+)
 
-func GenerateProbe(input string) (probe.Probe, string) {
+const Name = "HTTP"
+
+func GenerateProbe(input string) (types.Probe, string) {
 	data := getHttpWrapper(input)
-	httpProbe := probe.NewMap()
-	httpProbe.Add("code", probe.NewGenerator(func() probe.Probe {
-		return probe.NewNumber(data.GetCode(), "int")
+	httpProbe := types.NewMap("Check http resource")
+	httpProbe.Add("code", types.NewGenerator("response status code", types.NumberType, func() types.Probe {
+		return probe.NewNumber("", data.GetCode(), "int")
 	}))
-	httpProbe.Add("content", probe.NewGenerator(func() probe.Probe {
-		return probe.NewString(data.GetContent())
+	httpProbe.Add("content", types.NewGenerator("response content", types.StringType, func() types.Probe {
+		return probe.NewString("", data.GetContent())
 	}))
-	httpProbe.Add("online", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetOnline())
+	httpProbe.Add("online", types.NewGenerator("is online", types.BoolType, func() types.Probe {
+		return probe.NewBool("", data.GetOnline())
 	}))
-	httpProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(!data.GetOnline())
+	httpProbe.Add("offline", types.NewGenerator("is offline", types.BoolType, func() types.Probe {
+		return probe.NewBool("", !data.GetOnline())
 	}))
-	httpProbe.Add("headers", probe.NewGenerator(func() probe.Probe {
-		headersProbe := probe.NewList()
+	httpProbe.Add("headers", types.NewGenerator("headers content", "List[String]", func() types.Probe {
+		headersProbe := probe.NewList("")
 		for _, h := range data.GetHeaders() {
-			headersProbe.Add(probe.NewString(h))
+			headersProbe.Add(probe.NewString("", h))
 		}
 		return headersProbe
 	}))

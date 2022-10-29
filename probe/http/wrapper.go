@@ -53,10 +53,7 @@ func (w *httpWrapper) GetContent() string {
 	if !w.contentCached {
 		log.Debugf("no cache, w.contentCached=%v", w.contentCached)
 		defer w.getResp().Body.Close()
-		body, err := io.ReadAll(w.getResp().Body)
-		if err != nil {
-			log.Error(err)
-		}
+		body, _ := io.ReadAll(w.getResp().Body)
 		w.content = string(body)
 		w.contentCached = true
 	}
@@ -71,6 +68,7 @@ func (w *httpWrapper) GetHeaders() []string {
 	}
 	for h, v := range w.getResp().Header {
 		headers = append(headers, h+": "+v[0])
+		log.Debugf("header: '%s: %s'", h, v[0])
 	}
 	log.Debugf("headers: '%s'", headers)
 	return headers

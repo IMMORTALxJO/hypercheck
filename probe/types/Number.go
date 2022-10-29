@@ -1,4 +1,4 @@
-package probe
+package types
 
 import (
 	"fmt"
@@ -9,8 +9,9 @@ import (
 const NumberType = "Number"
 
 type Number struct {
-	value  uint64
-	parser Parser
+	description string
+	value       uint64
+	parser      Parser
 }
 
 func (p *Number) Up(input *Input) (bool, string) {
@@ -54,7 +55,11 @@ func (p *Number) GetParserType() string {
 	return p.parser.GetType()
 }
 
-func NewNumber(value uint64, parserName string) *Number {
+func (p *Number) GetDescription() string {
+	return fmt.Sprintf("%s ( %s )", p.description, p.GetType())
+}
+
+func NewNumber(description string, value uint64, parserName string) *Number {
 	var parser Parser
 	switch parserName {
 	case "bytes":
@@ -65,7 +70,8 @@ func NewNumber(value uint64, parserName string) *Number {
 		parser = &ParserInt{}
 	}
 	return &Number{
-		value:  value,
-		parser: parser,
+		description: description,
+		value:       value,
+		parser:      parser,
 	}
 }

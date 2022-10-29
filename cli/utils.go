@@ -1,18 +1,18 @@
 package cli
 
 import (
-	probe "probe/probe"
+	"hypercheck/probe/types"
 	re "regexp"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
 
-type CheckInputs []*probe.Input
+type CheckInputs []*types.Input
 
 // <key>[:aggregator]<operation><target>,...
 func ParseArguments(input string) CheckInputs {
-	inputs := []*probe.Input{}
+	inputs := []*types.Input{}
 	firstPartReg := re.MustCompile(`^\w{1,}(:\w{1,})?`)
 	lastPartReg := re.MustCompile(`[\d\w\.\-]+$`)
 	for id, argument := range strings.Split(input, ",") {
@@ -36,7 +36,7 @@ func ParseArguments(input string) CheckInputs {
 			operator = argument[len(firstPart) : len(argument)-len(lastPart)]
 		}
 		log.Debugf("key:'%s' aggregator:'%s' operator:'%s' value:'%s'", key, aggregator, operator, value)
-		inputs = append(inputs, &probe.Input{
+		inputs = append(inputs, &types.Input{
 			Key:        key,
 			Operator:   operator,
 			Aggregator: aggregator,
