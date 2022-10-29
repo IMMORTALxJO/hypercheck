@@ -57,6 +57,7 @@ func (w *fileWrapper) Stat() *syscall.Stat_t {
 		return w.stat
 	}
 	w.stat = w.getInfo().Sys().(*syscall.Stat_t)
+	w.statComputed = true
 	return w.stat
 }
 

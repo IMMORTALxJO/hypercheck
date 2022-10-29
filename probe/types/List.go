@@ -1,22 +1,26 @@
-package probe
+package types
 
 import (
 	"fmt"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const ListType = "List"
 
 type List struct {
-	value []Probe
+	description string
+	value       []Probe
 }
 
 func (p *List) Up(input *Input) (bool, string) {
+	log.Debugf("> List.Up")
 	aggregator := input.Aggregator
 	if aggregator == "" {
 		aggregator = "all"
 	}
 	if aggregator == "count" {
-		probe := NewNumber(uint64(len(p.GetValue())), "int")
+		probe := NewNumber("", uint64(len(p.GetValue())), "int")
 		return probe.Up(input)
 	}
 	if aggregator == "sum" {
@@ -40,11 +44,13 @@ func (p *List) Up(input *Input) (bool, string) {
 				parserType = probe.(*Number).GetParserType()
 			}
 		}
-		probe := NewNumber(sum, parserType)
+		probe := NewNumber("", sum, parserType)
 		return probe.Up(input)
 	}
 	for _, probe := range p.GetValue() {
-		result, msg := probe.Up(input)
+		log.Debugf(">> List.Probe.Up")
+		result, msg := probe.Up(NewProbeInput(input.Key, "", input.Operator, input.Value))
+		log.Debugf(">> List.Probe.Up = %v ( %s )", result, msg)
 		if result && aggregator == "any" {
 			return true, msg
 		}
@@ -55,7 +61,7 @@ func (p *List) Up(input *Input) (bool, string) {
 	if aggregator == "all" {
 		return true, ""
 	}
-	return false, fmt.Sprintf("Unknown aggregator '%s'", aggregator)
+	return false, fmt.Sprintf("Unknown aggregator '%s' ( allowed 'all', 'sum', 'count', 'any' )", aggregator)
 }
 
 func (p *List) Add(probe Probe) {
@@ -70,8 +76,13 @@ func (p *List) GetValue() []Probe {
 	return p.value
 }
 
-func NewList() *List {
+func (p *List) GetDescription() string {
+	return fmt.Sprintf("%s ( %s )", p.description, p.GetType())
+}
+
+func NewList(description string) *List {
 	return &List{
-		value: []Probe{},
+		description: description,
+		value:       []Probe{},
 	}
 }

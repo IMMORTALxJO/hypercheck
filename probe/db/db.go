@@ -1,15 +1,17 @@
 package db
 
-import "probe/probe"
+import "hypercheck/probe/types"
 
-func GenerateProbe(input string) (probe.Probe, string) {
+const Name = "DB"
+
+func GenerateProbe(input string) (types.Probe, string) {
 	data := getDbWrapper(input)
-	dbProbe := probe.NewMap()
-	dbProbe.Add("online", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetOnline())
+	dbProbe := types.NewMap("Check database ( pgsql, mysql )")
+	dbProbe.Add("online", types.NewGenerator("is online", types.BoolType, func() types.Probe {
+		return types.NewBool("", data.GetOnline())
 	}))
-	dbProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(!data.GetOnline())
+	dbProbe.Add("offline", types.NewGenerator("is offline", types.BoolType, func() types.Probe {
+		return types.NewBool("", !data.GetOnline())
 	}))
 
 	return dbProbe, ""

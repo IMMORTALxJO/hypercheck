@@ -1,4 +1,4 @@
-package probe
+package types
 
 const ParametrizedType = "Parametrized"
 
@@ -32,6 +32,10 @@ func (*Parametrized) GetType() string {
 
 func (p *Parametrized) GetValue() Probe {
 	return p.probe
+}
+
+func (p *Parametrized) GetDescription() string {
+	return p.probe.GetDescription()
 }
 
 func NewParametrized(probe Probe, input *Input) *Parametrized {

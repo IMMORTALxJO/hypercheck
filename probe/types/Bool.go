@@ -1,11 +1,12 @@
-package probe
+package types
 
 import "fmt"
 
 const BoolType = "Bool"
 
 type Bool struct {
-	value bool
+	description string
+	value       bool
 }
 
 func (p *Bool) Up(input *Input) (bool, string) {
@@ -20,8 +21,13 @@ func (p *Bool) GetValue() bool {
 	return p.value
 }
 
-func NewBool(value bool) *Bool {
+func (p *Bool) GetDescription() string {
+	return fmt.Sprintf("%s ( %s )", p.description, p.GetType())
+}
+
+func NewBool(description string, value bool) *Bool {
 	return &Bool{
-		value: value,
+		description: description,
+		value:       value,
 	}
 }

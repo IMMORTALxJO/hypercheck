@@ -1,47 +1,49 @@
 package dns
 
-import "probe/probe"
+import "hypercheck/probe/types"
 
-func GenerateProbe(input string) (probe.Probe, string) {
+const Name = "DNS"
+
+func GenerateProbe(input string) (types.Probe, string) {
 	data := getDnsWrapper(input)
-	dnsProbe := probe.NewMap()
-	dnsProbe.Add("online", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetOnline())
+	dnsProbe := types.NewMap("Check dns query response")
+	dnsProbe.Add("online", types.NewGenerator("A record is not empty", types.BoolType, func() types.Probe {
+		return types.NewBool("", data.GetOnline())
 	}))
-	dnsProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(!data.GetOnline())
+	dnsProbe.Add("offline", types.NewGenerator("A record is empty", types.BoolType, func() types.Probe {
+		return types.NewBool("", !data.GetOnline())
 	}))
-	dnsProbe.Add("A", probe.NewGenerator(func() probe.Probe {
-		records := probe.NewList()
+	dnsProbe.Add("A", types.NewGenerator("A record content", "List[string]", func() types.Probe {
+		records := types.NewList("")
 		for _, ip := range data.GetA() {
-			records.Add(probe.NewString(ip))
+			records.Add(types.NewString("", ip))
 		}
 		return records
 	}))
-	dnsProbe.Add("NS", probe.NewGenerator(func() probe.Probe {
-		records := probe.NewList()
+	dnsProbe.Add("NS", types.NewGenerator("NS record content", "List[string]", func() types.Probe {
+		records := types.NewList("")
 		for _, ip := range data.GetNS() {
-			records.Add(probe.NewString(ip))
+			records.Add(types.NewString("", ip))
 		}
 		return records
 	}))
-	dnsProbe.Add("TXT", probe.NewGenerator(func() probe.Probe {
-		records := probe.NewList()
+	dnsProbe.Add("TXT", types.NewGenerator("TXT record content", "List[string]", func() types.Probe {
+		records := types.NewList("")
 		for _, ip := range data.GetTXT() {
-			records.Add(probe.NewString(ip))
+			records.Add(types.NewString("", ip))
 		}
 		return records
 	}))
-	dnsProbe.Add("MX", probe.NewGenerator(func() probe.Probe {
-		records := probe.NewList()
+	dnsProbe.Add("MX", types.NewGenerator("MX record content", "List[string]", func() types.Probe {
+		records := types.NewList("")
 		for _, ip := range data.GetMX() {
-			records.Add(probe.NewString(ip))
+			records.Add(types.NewString("", ip))
 		}
 		return records
 	}))
 
-	dnsProbe.Add("CNAME", probe.NewGenerator(func() probe.Probe {
-		return probe.NewString(data.GetCNAME())
+	dnsProbe.Add("CNAME", types.NewGenerator("CNAME record content", types.StringType, func() types.Probe {
+		return types.NewString("", data.GetCNAME())
 	}))
 
 	return dnsProbe, ""

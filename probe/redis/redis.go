@@ -1,15 +1,17 @@
 package redis
 
-import "probe/probe"
+import "hypercheck/probe/types"
 
-func GenerateProbe(input string) (probe.Probe, string) {
+const Name = "redis"
+
+func GenerateProbe(input string) (types.Probe, string) {
 	data := getRedisWrapper(input)
-	redisProbe := probe.NewMap()
-	redisProbe.Add("online", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(data.GetPing())
+	redisProbe := types.NewMap("Test redis kv database")
+	redisProbe.Add("online", types.NewGenerator("is online", types.BoolType, func() types.Probe {
+		return types.NewBool("", data.GetPing())
 	}))
-	redisProbe.Add("offline", probe.NewGenerator(func() probe.Probe {
-		return probe.NewBool(!data.GetPing())
+	redisProbe.Add("offline", types.NewGenerator("is offline", types.BoolType, func() types.Probe {
+		return types.NewBool("", !data.GetPing())
 	}))
 
 	return redisProbe, ""

@@ -1,60 +1,87 @@
 package fs
 
 import (
+	"hypercheck/probe/types"
 	"path/filepath"
-	"probe/probe"
 
 	log "github.com/sirupsen/logrus"
 )
 
-func GenerateProbe(input string) (probe.Probe, string) {
-	paths, err := filepath.Glob(input)
-	if err != nil {
-		return probe.NewMap(), "Wrong files glob pattern"
-	}
-	fsSizeProbe := probe.NewList()
-	fsDirProbe := probe.NewList()
-	fsRegularProbe := probe.NewList()
-	fsUidProbe := probe.NewList()
-	fsUserProbe := probe.NewList()
-	fsGidProbe := probe.NewList()
-	fsGroupProbe := probe.NewList()
+const Name = "FS"
 
-	for _, path := range paths {
-		file := getFileWrapper(path)
-		fsSizeProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewNumber(file.getSize(), "bytes")
-		}))
-		fsDirProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewBool(file.IsDir())
-		}))
-		fsRegularProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewBool(file.IsRegular())
-		}))
-		fsUidProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewNumber(file.getUID(), "int")
-		}))
-		fsGidProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewNumber(file.getGID(), "int")
-		}))
-		fsGroupProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewString(file.getGroupname())
-		}))
-		fsUserProbe.Add(probe.NewGenerator(func() probe.Probe {
-			return probe.NewString(file.getUsername())
-		}))
-	}
-	fsProbe := probe.NewMap()
-	fsProbe.Add("size", fsSizeProbe)
-	fsProbe.Add("dir", fsDirProbe)
-	fsProbe.Add("regular", fsRegularProbe)
-	fsProbe.Add("uid", fsUidProbe)
-	fsProbe.Add("gid", fsGidProbe)
-	fsProbe.Add("user", fsUserProbe)
-	fsProbe.Add("group", fsGroupProbe)
-
-	fsProbe.Add("count", probe.NewNumber(uint64(len(paths)), "int"))
-	fsProbe.Add("exists", probe.NewBool(len(paths) > 0))
+func GenerateProbe(input string) (types.Probe, string) {
+	fsProbe := types.NewMap("Filesystem files check")
+	fsProbe.Add("size", types.NewGenerator("files size", "List[Number]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewNumber("", file.getSize(), "bytes"))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("dir", types.NewGenerator("is directory", "List[Bool]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewBool("", file.IsDir()))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("regular", types.NewGenerator("is regular file", "List[Bool]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewBool("", file.IsRegular()))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("uid", types.NewGenerator("files UID", "List[Number]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewNumber("", file.getUID(), "int"))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("gid", types.NewGenerator("files GID", "List[Number]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewNumber("", file.getGID(), "int"))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("user", types.NewGenerator("files username", "List[String]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewString("", file.getUsername()))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("group", types.NewGenerator("files groupname", "List[String]", func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		listProbe := types.NewList("")
+		for _, path := range paths {
+			file := getFileWrapper(path)
+			listProbe.Add(types.NewString("", file.getGroupname()))
+		}
+		return listProbe
+	}))
+	fsProbe.Add("count", types.NewGenerator("files count", types.NumberType, func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		return types.NewNumber("", uint64(len(paths)), "int")
+	}))
+	fsProbe.Add("exists", types.NewGenerator("at least one file found", types.BoolType, func() types.Probe {
+		paths, _ := filepath.Glob(input)
+		return types.NewBool("", len(paths) > 0)
+	}))
 	log.Debugf("fs probe initialized for '%s'", input)
 	return fsProbe, ""
 }

@@ -1,4 +1,4 @@
-package probe
+package types
 
 type Input struct {
 	Key        string

@@ -1,4 +1,4 @@
-package probe
+package types
 
 import (
 	"fmt"
@@ -11,14 +11,18 @@ import (
 const StringType = "String"
 
 type String struct {
-	value string
+	description string
+	value       string
 }
 
 func (p *String) Up(input *Input) (bool, string) {
 	left := p.GetValue()
-	if input.Aggregator == "length" {
-		probe := NewNumber(uint64(len(left)), "int")
-		return probe.Up(input)
+	if input.Aggregator != "" {
+		if input.Aggregator == "length" {
+			probe := NewNumber("", uint64(len(left)), "int")
+			return probe.Up(input)
+		}
+		return false, fmt.Sprintf("Unknown aggregator '%s' ( allowed 'length' )", input.Aggregator)
 	}
 	operator := input.Operator
 	right := input.Value
@@ -61,8 +65,13 @@ func (p *String) GetValue() string {
 	return p.value
 }
 
-func NewString(value string) *String {
+func (p *String) GetDescription() string {
+	return fmt.Sprintf("%s ( %s )", p.description, p.GetType())
+}
+
+func NewString(description string, value string) *String {
 	return &String{
-		value: value,
+		description: description,
+		value:       value,
 	}
 }
