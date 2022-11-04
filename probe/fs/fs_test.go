@@ -4,8 +4,6 @@ import (
 	"hypercheck/probe/types"
 	"testing"
 
-	log "github.com/sirupsen/logrus"
-
 	"gotest.tools/assert"
 )
 
@@ -38,7 +36,6 @@ func TestFS(t *testing.T) {
 	assert.Assert(t, getProbeResult(getProbe("./assets/d*"), "size", "sum", "==", "16Kb"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "uid", "", ">", "0"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "gid", "", ">", "0"))
-	log.SetLevel(log.DebugLevel)
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "user", "", "!=", ""))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "group", "", "!=", ""))
 

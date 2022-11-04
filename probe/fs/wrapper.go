@@ -68,23 +68,11 @@ func (w *fileWrapper) getGID() uint64 {
 	return uint64(w.Stat().Gid)
 }
 func (w *fileWrapper) getUsername() string {
-	uid := w.getUID()
-	log.Infof("%v", uid)
-	uidint := strconv.FormatUint(uid, 10)
-	log.Infof("%v", uidint)
-	usr, err := user.LookupId(uidint)
-	if err != nil {
-		log.Error(err)
-	}
-	log.Infof("%v", usr)
-	log.Infof("%v", err)
-	return usr.Name
+	usr, _ := user.LookupId(strconv.FormatUint(w.getUID(), 10))
+	return usr.Username
 }
 func (w *fileWrapper) getGroupname() string {
-	grp, err := user.LookupGroupId(strconv.FormatUint(w.getGID(), 10))
-	if err != nil {
-		log.Error(err)
-	}
+	grp, _ := user.LookupGroupId(strconv.FormatUint(w.getGID(), 10))
 	return grp.Name
 }
 
