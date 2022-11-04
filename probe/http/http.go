@@ -16,10 +16,10 @@ func GenerateProbe(input string) (types.Probe, string) {
 	httpProbe.Add("content", types.NewGenerator("response content", types.StringType, func() types.Probe {
 		return probe.NewString("", data.GetContent())
 	}))
-	httpProbe.Add("online", types.NewGenerator("is online", types.BoolType, func() types.Probe {
+	httpProbe.Add("online", types.NewGenerator("status code 200", types.BoolType, func() types.Probe {
 		return probe.NewBool("", data.GetOnline())
 	}))
-	httpProbe.Add("offline", types.NewGenerator("is offline", types.BoolType, func() types.Probe {
+	httpProbe.Add("offline", types.NewGenerator("status code is not 200", types.BoolType, func() types.Probe {
 		return probe.NewBool("", !data.GetOnline())
 	}))
 	httpProbe.Add("headers", types.NewGenerator("headers content", "List[String]", func() types.Probe {

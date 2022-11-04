@@ -158,7 +158,9 @@ func isFlag(arg string) bool {
 }
 
 func printHelp() {
-	probe, _ := fsProbe.GenerateProbe("")
+	probe, _ := autoProbe.GenerateProbe()
+	fmt.Println("--auto\n", probe.GetDescription())
+	probe, _ = fsProbe.GenerateProbe("")
 	fmt.Println("--fs\n", probe.GetDescription())
 	probe, _ = httpProbe.GenerateProbe("")
 	fmt.Println("--http\n", probe.GetDescription())
@@ -172,6 +174,4 @@ func printHelp() {
 	fmt.Println("--redis\n", probe.GetDescription())
 	probe, _ = dbProbe.GenerateProbe("")
 	fmt.Println("--db\n", probe.GetDescription())
-	probe, _ = autoProbe.GenerateProbe()
-	fmt.Println("--auto\n", probe.GetDescription())
 }
