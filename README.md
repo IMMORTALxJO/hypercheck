@@ -45,10 +45,11 @@ Checking 'online,latency<1s' 1.1.1.1:53 ...
         ✅  TCP latency<1s 1.1.1.1:53
 ```
 
-If you have databases and api credentials you your environment variables, you can simply run:
+If you have databases and api credentials in your environment variables, you can simply run:
 ```
 ~ hypercheck --auto
 ```
+
 
 ### Development
 
