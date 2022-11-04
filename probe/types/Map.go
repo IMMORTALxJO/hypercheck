@@ -33,6 +33,7 @@ func (*Map) GetType() string {
 
 func (p *Map) GetDescription() string {
 	description := p.description
+	description += fmt.Sprintf(", attributes:")
 	for key, probe := range p.value {
 		description += fmt.Sprintf("\n\t%s - %s", key, probe.GetDescription())
 	}
