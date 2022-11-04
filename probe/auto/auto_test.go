@@ -5,8 +5,6 @@ import (
 	"os"
 	"testing"
 
-	log "github.com/sirupsen/logrus"
-
 	"gotest.tools/assert"
 )
 
@@ -41,6 +39,5 @@ func TestAutoProbeRedis(t *testing.T) {
 func TestAutoProbeDB(t *testing.T) {
 	os.Clearenv()
 	os.Setenv("DB_HOST", "postgres://user:password@localhost:5432/postgres?sslmode=disable")
-	log.SetLevel(log.DebugLevel)
 	assert.Assert(t, getProbeResult(getProbe()))
 }
