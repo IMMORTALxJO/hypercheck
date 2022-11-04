@@ -15,8 +15,72 @@ Supported checks:
   - mysql
   - postgres
 
-### Example
+### Usage
+```
+--fs
+ Filesystem files check, attributes:
+        size - files size ( List[Number] )
+        regular - is regular file ( List[Bool] )
+        user - files username ( List[String] )
+        exists - at least one file found ( Bool )
+        dir - is directory ( List[Bool] )
+        uid - files UID ( List[Number] )
+        gid - files GID ( List[Number] )
+        group - files groupname ( List[String] )
+        count - files count ( Number )
+--http
+ Check http resource, attributes:
+        code - response status code ( Number )
+        content - response content ( String )
+        online - is online ( Bool )
+        offline - is offline ( Bool )
+        headers - headers content ( List[String] )
+--tcp
+ Check tcp port, attributes:
+        latency - duration ( Number )
+        online - is reachable ( Bool )
+        offline - is unreachable ( Bool )
+--dns
+ Check dns query response, attributes:
+        CNAME - CNAME record content ( String )
+        online - A record is not empty ( Bool )
+        offline - A record is empty ( Bool )
+        A - A record content ( List[string] )
+        NS - NS record content ( List[string] )
+        TXT - TXT record content ( List[string] )
+        MX - MX record content ( List[string] )
+--tcp
+ Check tcp port, attributes:
+        online - is reachable ( Bool )
+        offline - is unreachable ( Bool )
+        latency - duration ( Number )
+--redis
+ Test redis kv database, attributes:
+        online - is reachable ( Bool )
+        offline - is unreachable ( Bool )
+--db
+ Check database ( pgsql, mysql ), attributes:
+        online - is reachable ( Bool )
+        offline - is unreachable ( Bool )
+--auto
+ Generate probes automaticaly based on current environment variables ( List )
+```
+### Examples
 
+If you have connections in your environment variables, you can simply run:
+```
+~ env
+...
+API_ENDPOINT=https://postman-echo.com/basic-auth
+API_USER=postman
+API_PASS=passowrd
+...
+~ hypercheck --auto
+
+```
+> automatic dependency detection powered by [scheme-detector](https://github.com/IMMORTALxJO/scheme-detector)
+
+Manual checks are also possible:
 ```
 ~ hypercheck \
   --db online 'mysql://user:password@localhost:3306/database' \
@@ -46,14 +110,7 @@ Checking 'online,latency<1s' 1.1.1.1:53 ...
         ✅  TCP latency<1s 1.1.1.1:53
 ```
 
-If you have databases and api credentials in your environment variables, you can simply run:
-```
-~ hypercheck --auto
-```
-
-
 ### Development
-
 ```
 docker-compose up -d
 go test -v -coverprofile=coverage.out ./...
