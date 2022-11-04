@@ -30,12 +30,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Prepare assets
-        run: |
-          whoami
-          ls -la
-          ls -la ./probe/fs/assets
-
       - name: Run Test
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
