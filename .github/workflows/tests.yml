@@ -32,6 +32,7 @@ jobs:
 
       - name: Run Test
         run: |
+          chown -R nobody: ./probe/fs/assets
           go test -v ./... -covermode=count -coverprofile=coverage.out
           go tool cover -func=coverage.out -o=coverage.out
 
