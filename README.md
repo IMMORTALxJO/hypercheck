@@ -5,15 +5,15 @@
 Single binary to test everything you need. Perfectly fits for kubernetes pod healthchecks and init-containers.
 
 Supported checks:
-- Auto - generate checks automagicly based on environment variables 🧙
-- HTTP - status codes, content body, headers
-- TCP - address reachability, latency
-- File system - existence, type ( dir or regular ), size, count, owners, etc.
-- DNS - records content and count ( A, CNAME, MX, TXT, etc. )
-- Redis - ping-pong check
-- databases connectivity:
-  - mysql
-  - postgres
+- **Auto** - generate checks automagicly based on environment variables 🧙
+- **HTTP** - status codes, content body, headers
+- **TCP** - address reachability, latency
+- **File System** - existence, type ( dir or regular ), size, count, owners, etc.
+- **DNS** - records content and count ( A, CNAME, MX, TXT, etc. )
+- **Redis** - ping-pong check
+- Databases connectivity:
+  - **mysql**
+  - **postgres**
 
 ### Examples
 
