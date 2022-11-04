@@ -27,7 +27,6 @@ func getProbeMsg(probe types.Probe, key string, agg string, op string, target st
 func TestFS(t *testing.T) {
 	fsProbe := getProbe("./assets/**")
 	assert.Equal(t, fsProbe.GetType(), "Map")
-	log.SetLevel(log.DebugLevel)
 	assert.Assert(t, getProbeResult(fsProbe, "count", "", ">", "0"))
 	assert.Assert(t, getProbeResult(fsProbe, "count", "", "==", "7"))
 	assert.Assert(t, getProbeResult(fsProbe, "exists", "", "", ""))
@@ -39,6 +38,7 @@ func TestFS(t *testing.T) {
 	assert.Assert(t, getProbeResult(getProbe("./assets/d*"), "size", "sum", "==", "16Kb"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "uid", "", ">", "0"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "gid", "", ">", "0"))
+	log.SetLevel(log.DebugLevel)
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "user", "", "!=", ""))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "group", "", "!=", ""))
 
