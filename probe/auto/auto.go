@@ -39,10 +39,10 @@ func GenerateProbe() (types.Probe, string) {
 			autoProbe.Add(types.NewParametrized(redis, types.NewProbeInput("online", "", "", "")))
 		}
 		if scheme.URL.Scheme == "postgres" || scheme.URL.Scheme == "mysql" {
-			log.Debugf("Found DB: %s", scheme.URL.String())
+			log.Debugf("Found DB: %s", scheme.String())
 			tcp, _ := tcpProbe.GenerateProbe(scheme.URL.Hostname() + ":" + scheme.URL.Port())
 			autoProbe.Add(types.NewParametrized(tcp, types.NewProbeInput("online", "", "", "")))
-			db, _ := dbProbe.GenerateProbe(scheme.URL.String())
+			db, _ := dbProbe.GenerateProbe(scheme.String())
 			autoProbe.Add(types.NewParametrized(db, types.NewProbeInput("online", "", "", "")))
 		}
 

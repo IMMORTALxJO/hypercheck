@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	code.cloudfoundry.org/bytefmt v0.0.0-20210608160410-67692ebc98de
-	github.com/IMMORTALxJO/scheme-detector v0.0.0-alpha
+	github.com/IMMORTALxJO/scheme-detector v0.0.0-alpha.0.20221103150546-1c206face3ef
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gomodule/redigo v1.8.8
 	github.com/lib/pq v1.10.6

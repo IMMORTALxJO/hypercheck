@@ -69,7 +69,7 @@ func (w *fileWrapper) getGID() uint64 {
 }
 func (w *fileWrapper) getUsername() string {
 	usr, _ := user.LookupId(strconv.FormatUint(w.getUID(), 10))
-	return usr.Name
+	return usr.Username
 }
 func (w *fileWrapper) getGroupname() string {
 	grp, _ := user.LookupGroupId(strconv.FormatUint(w.getGID(), 10))

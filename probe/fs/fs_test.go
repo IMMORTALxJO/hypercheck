@@ -44,5 +44,4 @@ func TestFS(t *testing.T) {
 	assert.Assert(t, !getProbeResult(fsProbe, "regular", "", "", ""))
 	assert.Assert(t, getProbeResult(fsProbe, "dir", "any", "", ""))
 	assert.Assert(t, getProbeResult(fsProbe, "regular", "any", "", ""))
-
 }
