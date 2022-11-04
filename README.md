@@ -1,4 +1,5 @@
 # hypercheck
+![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)
 [![DeepSource](https://deepsource.io/gh/IMMORTALxJO/hypercheck.svg/?label=active+issues&show_trend=true&token=SaCVhzg7Sci39dpzTEGdpLsS)](https://deepsource.io/gh/IMMORTALxJO/hypercheck/?ref=repository-badge)
 
 Single binary to test everything you need.
