@@ -1,4 +1,5 @@
 # hypercheck
+![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)
 [![DeepSource](https://deepsource.io/gh/IMMORTALxJO/hypercheck.svg/?label=active+issues&show_trend=true&token=SaCVhzg7Sci39dpzTEGdpLsS)](https://deepsource.io/gh/IMMORTALxJO/hypercheck/?ref=repository-badge)
 
 Single binary to test everything you need.
@@ -45,10 +46,11 @@ Checking 'online,latency<1s' 1.1.1.1:53 ...
         ✅  TCP latency<1s 1.1.1.1:53
 ```
 
-If you have databases and api credentials you your environment variables, you can simply run:
+If you have databases and api credentials in your environment variables, you can simply run:
 ```
 ~ hypercheck --auto
 ```
+
 
 ### Development
 
