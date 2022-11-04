@@ -2,22 +2,22 @@
 ![Coverage](https://img.shields.io/badge/Coverage-100.0%25-brightgreen)
 [![DeepSource](https://deepsource.io/gh/IMMORTALxJO/hypercheck.svg/?label=active+issues&show_trend=true&token=SaCVhzg7Sci39dpzTEGdpLsS)](https://deepsource.io/gh/IMMORTALxJO/hypercheck/?ref=repository-badge)
 
-Single binary to test everything you need.
+Single binary to test everything you need. Perfectly fits for kubernetes pod healthchecks and init-containers.
 
 Supported checks:
-- auto
-- http
-- tcp
-- file system
-- dns
-- redis
-- db
+- Auto - generate checks automagicly based on environment variables 🧙
+- HTTP - status codes, content body, headers
+- TCP - address reachability, latency
+- File system - existence, type ( dir or regular ), size, count, owners, etc.
+- DNS - records content and count ( A, CNAME, MX, TXT, etc. )
+- Redis - ping-pong check
+- databases connectivity:
   - mysql
   - postgres
 
 ### Examples
 
-If you have connections in your environment variables, you can simply run:
+If you have some connection descriptions in your environment variables, you can simply run:
 ```
 ~ env
 ...
@@ -27,7 +27,7 @@ API_PASS=passowrd
 ...
 ~ hypercheck --auto
 ```
-> automatic dependency detection powered by [scheme-detector](https://github.com/IMMORTALxJO/scheme-detector)
+> detection magic powered by [scheme-detector](https://github.com/IMMORTALxJO/scheme-detector)
 
 Manual checks are also possible:
 ```
