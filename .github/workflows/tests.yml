@@ -33,6 +33,8 @@ jobs:
       - name: Prepare assets
         run: |
           whoami
+          ls -la
+          ls -la ./probe/fs/assets
 
       - name: Run Test
         run: |
