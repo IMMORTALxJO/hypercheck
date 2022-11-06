@@ -10,24 +10,25 @@ import (
 	httpProbe "hypercheck/probe/http"
 	redisProbe "hypercheck/probe/redis"
 	tcpProbe "hypercheck/probe/tcp"
+	types "hypercheck/probe/types"
 	"os"
 
 	log "github.com/sirupsen/logrus"
 )
 
 func main() {
-	log.SetLevel(log.InfoLevel)
 	globalResult := true
 	for i := 1; i < len(os.Args); i++ {
 		if os.Args[i] == "-v" {
 			log.SetLevel(log.DebugLevel)
 		}
-		if os.Args[i] == "--help" {
+		if os.Args[i] == "--help" || os.Args[i] == "-h" {
 			printHelp()
 			os.Exit(0)
 		}
 	}
 	i := 1
+	var globalProbes []types.Probe
 	for i < len(os.Args) {
 		log.Debugf("parseArg[%d]: %s", i, os.Args[i])
 
@@ -39,93 +40,73 @@ func main() {
 		log.Debugf("probeFlag: %s", probeFlag)
 		i++
 		log.Debugf("i := %d", i)
-		probe, _ := httpProbe.GenerateProbe("")
 
-		err := ""
+		var probe types.Probe
 		args := ""
 		target := ""
-		probeName := ""
+		err := ""
+		for _, n := range []string{"args", "target"} {
+			if len(os.Args) > i && !isFlag(os.Args[i]) {
+				if args == "" {
+					args = os.Args[i]
+				} else {
+					target = os.Args[i]
+				}
+				log.Debugf("%s: %s", n, args)
+				i++
+				log.Debugf("i := %d", i)
+			}
+		}
+		if target == "" && args != "" {
+			target = args
+			log.Debugf("probeTarget := probeArgs")
+			args = "online"
+		}
 
-		if len(os.Args) > i && !isFlag(os.Args[i]) {
-			args = os.Args[i]
-			log.Debugf("args: %s", args)
-			i++
-			log.Debugf("i := %d", i)
-		}
-		if len(os.Args) > i && !isFlag(os.Args[i]) {
-			target = os.Args[i]
-			log.Debugf("target: %s", args)
-			i++
-			log.Debugf("i := %d", i)
-		}
 		switch probeFlag {
 		case "-v":
 			continue
 		case "--fs":
-			probeName = fsProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
+			if args == "online" {
 				args = "exists"
 			}
 			probe, err = fsProbe.GenerateProbe(target)
 		case "--http":
-			probeName = httpProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
-				args = "online"
-			}
 			probe, err = httpProbe.GenerateProbe(target)
 		case "--tcp":
-			probeName = tcpProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
-				args = "online"
-			}
 			probe, err = tcpProbe.GenerateProbe(target)
 		case "--dns":
-			probeName = dnsProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
-				args = "online"
-			}
 			probe, err = dnsProbe.GenerateProbe(target)
 		case "--redis":
-			probeName = redisProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
-				args = "online"
-			}
 			probe, err = redisProbe.GenerateProbe(target)
 		case "--db":
-			probeName = dbProbe.Name
-			if target == "" && args != "" {
-				target = args
-				log.Debugf("probeTarget := probeArgs")
-				args = "online"
-			}
 			probe, err = dbProbe.GenerateProbe(target)
 		case "--auto":
-			probeName = autoProbe.Name
+			os.Setenv("SCHEME_DETECTOR_EXCLUDE", os.Getenv("HYPERCHECK_ENV_EXCLUDE"))
 			probe, err = autoProbe.GenerateProbe()
+		default:
+			log.Errorf("Unknown argument '%s'", probeFlag)
+			os.Exit(1)
+		}
+		if probe.GetType() == types.ListType {
+			globalProbes = append(globalProbes, probe.(*types.List).GetValue()...)
+		} else {
+			for _, probeInput := range cli.ParseArguments(args) {
+				globalProbes = append(globalProbes, types.NewParametrized(probe, probeInput))
+			}
 		}
 		if err != "" {
 			log.Error(err)
 			os.Exit(1)
 		}
-		fmt.Printf("Checking '%s' %s ...\n", args, target)
-		for _, probeInput := range cli.ParseArguments(args) {
-			result, msg := probe.Up(probeInput)
-			if result {
-				fmt.Printf("\t\u2705  %s %s %s\n", probeName, probeInput.ToString(), target)
-			} else {
-				fmt.Printf("\t\u274C  %s %s %s ( %s )\n", probeName, probeInput.ToString(), target, msg)
-				globalResult = false
-			}
+	}
+	for _, probe := range globalProbes {
+		result, msg := probe.Up(types.NewProbeInput("", "", "", ""))
+		if result {
+			fmt.Printf("\u2705 %s %s\n", probe.GetDescription(), msg)
+		} else {
+			fmt.Printf("\u274C %s %s\n", probe.GetDescription(), msg)
+			globalResult = false
 		}
 	}
 	if !globalResult {
@@ -134,31 +115,13 @@ func main() {
 }
 
 func isFlag(arg string) bool {
-	switch arg {
-	case "-v":
-		return true
-	case "--help":
-		return true
-	case "--fs":
-		return true
-	case "--http":
-		return true
-	case "--tcp":
-		return true
-	case "--dns":
-		return true
-	case "--redis":
-		return true
-	case "--db":
-		return true
-	case "--auto":
-		return true
-	}
-	return false
+	return arg[0] == '-'
 }
 
 func printHelp() {
-	probe, _ := fsProbe.GenerateProbe("")
+	probe, _ := autoProbe.GenerateProbe()
+	fmt.Println("--auto\n", probe.GetDescription())
+	probe, _ = fsProbe.GenerateProbe("")
 	fmt.Println("--fs\n", probe.GetDescription())
 	probe, _ = httpProbe.GenerateProbe("")
 	fmt.Println("--http\n", probe.GetDescription())
@@ -172,6 +135,4 @@ func printHelp() {
 	fmt.Println("--redis\n", probe.GetDescription())
 	probe, _ = dbProbe.GenerateProbe("")
 	fmt.Println("--db\n", probe.GetDescription())
-	probe, _ = autoProbe.GenerateProbe()
-	fmt.Println("--auto\n", probe.GetDescription())
 }

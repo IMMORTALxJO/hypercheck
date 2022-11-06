@@ -18,7 +18,8 @@ type Generator struct {
 }
 
 func (p *Generator) Up(input *Input) (bool, string) {
-	return p.GetValue().Up(input)
+	result, msg := p.GetValue().Up(input)
+	return result, msg
 }
 
 func (p *Generator) GetValue() Probe {

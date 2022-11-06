@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"fmt"
 	"hypercheck/probe/types"
 	"path/filepath"
 
@@ -10,7 +11,12 @@ import (
 const Name = "FS"
 
 func GenerateProbe(input string) (types.Probe, string) {
-	fsProbe := types.NewMap("Filesystem files check")
+	description := "Filesystem files check"
+	if len(input) > 0 {
+		description = fmt.Sprintf("FileSystem %s", input)
+	}
+
+	fsProbe := types.NewMap(description, len(input) > 0)
 	fsProbe.Add("size", types.NewGenerator("files size", "List[Number]", func() types.Probe {
 		paths, _ := filepath.Glob(input)
 		listProbe := types.NewList("")
@@ -25,7 +31,7 @@ func GenerateProbe(input string) (types.Probe, string) {
 		listProbe := types.NewList("")
 		for _, path := range paths {
 			file := getFileWrapper(path)
-			listProbe.Add(types.NewBool("", file.IsDir()))
+			listProbe.Add(types.NewBool("", file.isDir()))
 		}
 		return listProbe
 	}))
@@ -34,11 +40,11 @@ func GenerateProbe(input string) (types.Probe, string) {
 		listProbe := types.NewList("")
 		for _, path := range paths {
 			file := getFileWrapper(path)
-			listProbe.Add(types.NewBool("", file.IsRegular()))
+			listProbe.Add(types.NewBool("", file.isRegular()))
 		}
 		return listProbe
 	}))
-	fsProbe.Add("uid", types.NewGenerator("files UID", "List[Number]", func() types.Probe {
+	fsProbe.Add("uid", types.NewGenerator("UID", "List[Number]", func() types.Probe {
 		paths, _ := filepath.Glob(input)
 		listProbe := types.NewList("")
 		for _, path := range paths {
@@ -47,7 +53,7 @@ func GenerateProbe(input string) (types.Probe, string) {
 		}
 		return listProbe
 	}))
-	fsProbe.Add("gid", types.NewGenerator("files GID", "List[Number]", func() types.Probe {
+	fsProbe.Add("gid", types.NewGenerator("GID", "List[Number]", func() types.Probe {
 		paths, _ := filepath.Glob(input)
 		listProbe := types.NewList("")
 		for _, path := range paths {
@@ -56,7 +62,7 @@ func GenerateProbe(input string) (types.Probe, string) {
 		}
 		return listProbe
 	}))
-	fsProbe.Add("user", types.NewGenerator("files username", "List[String]", func() types.Probe {
+	fsProbe.Add("user", types.NewGenerator("Username", "List[String]", func() types.Probe {
 		paths, _ := filepath.Glob(input)
 		listProbe := types.NewList("")
 		for _, path := range paths {
@@ -65,7 +71,7 @@ func GenerateProbe(input string) (types.Probe, string) {
 		}
 		return listProbe
 	}))
-	fsProbe.Add("group", types.NewGenerator("files groupname", "List[String]", func() types.Probe {
+	fsProbe.Add("group", types.NewGenerator("Groupname", "List[String]", func() types.Probe {
 		paths, _ := filepath.Glob(input)
 		listProbe := types.NewList("")
 		for _, path := range paths {

@@ -10,7 +10,7 @@ type Bool struct {
 }
 
 func (p *Bool) Up(input *Input) (bool, string) {
-	return p.GetValue(), fmt.Sprintf("boolean statement '%s' is %v", input.ToString(), p.value)
+	return p.GetValue(), fmt.Sprintf("'%s' is %v", input.ToString(), p.value)
 }
 
 func (*Bool) GetType() string {

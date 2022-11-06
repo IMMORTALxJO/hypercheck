@@ -29,12 +29,12 @@ func (w *fileWrapper) getInfo() os.FileInfo {
 	return w.info
 }
 
-func (w *fileWrapper) IsRegular() bool {
+func (w *fileWrapper) isRegular() bool {
 	mode := w.getInfo().Mode()
 	return mode.IsRegular()
 }
 
-func (w *fileWrapper) IsDir() bool {
+func (w *fileWrapper) isDir() bool {
 	return w.getInfo().IsDir()
 }
 
@@ -43,7 +43,7 @@ func (w *fileWrapper) getSize() uint64 {
 	if w.sizeCounted {
 		return w.size
 	}
-	if w.IsDir() {
+	if w.isDir() {
 		w.size = getDirSize(w)
 	} else {
 		w.size = uint64(w.getInfo().Size())

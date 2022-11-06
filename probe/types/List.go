@@ -47,9 +47,11 @@ func (p *List) Up(input *Input) (bool, string) {
 		probe := NewNumber("", sum, parserType)
 		return probe.Up(input)
 	}
+	var msg string
 	for _, probe := range p.GetValue() {
 		log.Debugf(">> List.Probe.Up")
-		result, msg := probe.Up(NewProbeInput(input.Key, "", input.Operator, input.Value))
+		var result bool
+		result, msg = probe.Up(NewProbeInput(input.Key, "", input.Operator, input.Value))
 		log.Debugf(">> List.Probe.Up = %v ( %s )", result, msg)
 		if result && aggregator == "any" {
 			return true, msg
@@ -59,7 +61,7 @@ func (p *List) Up(input *Input) (bool, string) {
 		}
 	}
 	if aggregator == "all" {
-		return true, ""
+		return true, msg
 	}
 	return false, fmt.Sprintf("Unknown aggregator '%s' ( allowed 'all', 'sum', 'count', 'any' )", aggregator)
 }

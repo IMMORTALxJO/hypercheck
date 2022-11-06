@@ -8,9 +8,10 @@ import (
 const MapType = "Map"
 
 type Map struct {
-	description string
-	value       map[string]Probe
-	keys        []string
+	description        string
+	descriptionIsShort bool
+	value              map[string]Probe
+	keys               []string
 }
 
 func (p *Map) Up(input *Input) (bool, string) {
@@ -32,6 +33,9 @@ func (*Map) GetType() string {
 }
 
 func (p *Map) GetDescription() string {
+	if p.descriptionIsShort {
+		return p.description
+	}
 	description := p.description
 	for key, probe := range p.value {
 		description += fmt.Sprintf("\n\t%s - %s", key, probe.GetDescription())
@@ -39,10 +43,11 @@ func (p *Map) GetDescription() string {
 	return description
 }
 
-func NewMap(description string) *Map {
+func NewMap(description string, descriptionIsShort bool) *Map {
 	return &Map{
-		description: description,
-		value:       map[string]Probe{},
-		keys:        []string{},
+		description:        description,
+		descriptionIsShort: descriptionIsShort,
+		value:              map[string]Probe{},
+		keys:               []string{},
 	}
 }
