@@ -12,7 +12,7 @@ type tcpWrapper struct {
 	latency uint64
 }
 
-func (w *tcpWrapper) GetOnline() bool {
+func (w *tcpWrapper) getOnline() bool {
 	netd := net.Dialer{Timeout: time.Duration(1) * time.Second}
 	startTime := time.Now().Unix()
 	conn, err := netd.Dial("tcp", w.Address)
@@ -25,8 +25,8 @@ func (w *tcpWrapper) GetOnline() bool {
 	return true
 }
 
-func (w *tcpWrapper) GetLatency() uint64 {
-	w.GetOnline()
+func (w *tcpWrapper) getLatency() uint64 {
+	w.getOnline()
 	return w.latency
 }
 

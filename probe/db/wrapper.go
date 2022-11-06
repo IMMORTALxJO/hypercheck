@@ -21,7 +21,7 @@ type dbWrapper struct {
 	conn    *sql.DB
 }
 
-func (w *dbWrapper) GetOnline() bool {
+func (w *dbWrapper) getOnline() bool {
 	err := w.getError()
 	if err != nil {
 		log.Error(err)

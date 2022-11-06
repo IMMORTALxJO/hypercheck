@@ -21,24 +21,25 @@ func (p *Number) Up(input *Input) (bool, string) {
 	}
 	left := p.GetValue()
 	operator := input.Operator
+	inputString := input.ToString()
 	log.Debugf("number: check %d %s %d", left, operator, right)
 	if operator == "==" || operator == "=" {
-		return left == right, fmt.Sprintf("%d == %d", left, right)
+		return left == right, fmt.Sprintf("'%s' %d == %d", inputString, left, right)
 	}
 	if operator == ">" {
-		return left > right, fmt.Sprintf("%d > %d", left, right)
+		return left > right, fmt.Sprintf("'%s' %d > %d", inputString, left, right)
 	}
 	if operator == ">=" {
-		return left >= right, fmt.Sprintf("%d >= %d", left, right)
+		return left >= right, fmt.Sprintf("'%s' %d >= %d", inputString, left, right)
 	}
 	if operator == "<" {
-		return left < right, fmt.Sprintf("%d < %d", left, right)
+		return left < right, fmt.Sprintf("'%s' %d < %d", inputString, left, right)
 	}
 	if operator == "<=" {
-		return left <= right, fmt.Sprintf("%d <= %d", left, right)
+		return left <= right, fmt.Sprintf("'%s' %d <= %d", inputString, left, right)
 	}
 	if operator == "!=" {
-		return left != right, fmt.Sprintf("%d != %d", left, right)
+		return left != right, fmt.Sprintf("'%s' %d != %d", inputString, left, right)
 	}
 	return false, fmt.Sprintf("unknown operator '%s'", operator)
 }

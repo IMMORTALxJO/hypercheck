@@ -31,14 +31,14 @@ func (w *httpWrapper) load() {
 	log.Debugf("http.resp loaded %s", w.Url)
 }
 
-func (w *httpWrapper) GetCode() uint64 {
-	if !w.GetOnline() {
+func (w *httpWrapper) getCode() uint64 {
+	if !w.getOnline() {
 		return uint64(0)
 	}
 	return uint64(w.getResp().StatusCode)
 }
 
-func (w *httpWrapper) GetOnline() bool {
+func (w *httpWrapper) getOnline() bool {
 	err := w.getError()
 	if err != nil {
 		log.Error(err)
@@ -46,8 +46,8 @@ func (w *httpWrapper) GetOnline() bool {
 	return err == nil
 }
 
-func (w *httpWrapper) GetContent() string {
-	if !w.GetOnline() {
+func (w *httpWrapper) getContent() string {
+	if !w.getOnline() {
 		return ""
 	}
 	if !w.contentCached {
@@ -61,9 +61,9 @@ func (w *httpWrapper) GetContent() string {
 	return w.content
 }
 
-func (w *httpWrapper) GetHeaders() []string {
+func (w *httpWrapper) getHeaders() []string {
 	var headers []string
-	if !w.GetOnline() {
+	if !w.getOnline() {
 		return headers
 	}
 	for h, v := range w.getResp().Header {

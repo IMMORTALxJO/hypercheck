@@ -13,7 +13,7 @@ type redisWrapper struct {
 	err     error
 }
 
-func (w *redisWrapper) GetPing() bool {
+func (w *redisWrapper) getPing() bool {
 	conn, err := w.getConn()
 	if err != nil {
 		log.Error(err)

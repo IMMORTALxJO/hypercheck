@@ -9,12 +9,12 @@ import (
 
 const TestMapDescription = "Map description"
 
-func NewMapTest() *Map {
-	return NewMap(TestMapDescription)
+func NewMapTest(descriptionIsShort bool) *Map {
+	return NewMap(TestMapDescription, descriptionIsShort)
 }
 
 func TestMap(t *testing.T) {
-	probe := NewMapTest()
+	probe := NewMapTest(false)
 	probeNumbersList := NewListTest()
 	probe.Add("number", NewNumberTest(2, "int"))
 	probe.Add("string", NewStringTest("teststring"))
@@ -34,9 +34,11 @@ func TestMap(t *testing.T) {
 }
 
 func TestMapMeta(t *testing.T) {
-	probe := NewMapTest()
+	probe := NewMapTest(false)
 	numberProbe := NewNumberTest(10, "int")
 	probe.Add("number", numberProbe)
 	assert.Equal(t, probe.GetType(), MapType)
 	assert.Equal(t, probe.GetDescription(), fmt.Sprintf("%s\n\tnumber - %s", TestMapDescription, numberProbe.GetDescription()))
+	probe = NewMapTest(true)
+	assert.Equal(t, probe.GetDescription(), TestMapDescription)
 }

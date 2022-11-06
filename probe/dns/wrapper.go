@@ -15,7 +15,7 @@ type dnsWrapper struct {
 	rec_CNAME string
 }
 
-func (w *dnsWrapper) GetA() []string {
+func (w *dnsWrapper) getA() []string {
 	if w.rec_A == nil {
 		w.rec_A = []string{}
 		lookup, err := net.LookupIP(w.Domain)
@@ -30,7 +30,7 @@ func (w *dnsWrapper) GetA() []string {
 	return w.rec_A
 }
 
-func (w *dnsWrapper) GetCNAME() string {
+func (w *dnsWrapper) getCNAME() string {
 	var err error
 	if w.rec_CNAME == "" {
 		w.rec_CNAME, err = net.LookupCNAME(w.Domain)
@@ -42,7 +42,7 @@ func (w *dnsWrapper) GetCNAME() string {
 	return w.rec_CNAME
 }
 
-func (w *dnsWrapper) GetNS() []string {
+func (w *dnsWrapper) getNS() []string {
 	if w.rec_NS == nil {
 		lookup, err := net.LookupNS(w.Domain)
 		if err != nil {
@@ -56,7 +56,7 @@ func (w *dnsWrapper) GetNS() []string {
 	return w.rec_NS
 }
 
-func (w *dnsWrapper) GetMX() []string {
+func (w *dnsWrapper) getMX() []string {
 	if w.rec_MX == nil {
 		lookup, err := net.LookupMX(w.Domain)
 		if err != nil {
@@ -70,9 +70,9 @@ func (w *dnsWrapper) GetMX() []string {
 	return w.rec_MX
 }
 
-func (w *dnsWrapper) GetTXT() []string {
+func (w *dnsWrapper) getTXT() []string {
 	var err error
-	if w.rec_MX == nil {
+	if w.rec_TXT == nil {
 		w.rec_TXT, err = net.LookupTXT(w.Domain)
 		if err != nil {
 			log.Error(err)
@@ -82,8 +82,8 @@ func (w *dnsWrapper) GetTXT() []string {
 	return w.rec_TXT
 }
 
-func (w *dnsWrapper) GetOnline() bool {
-	return len(w.GetA()) > 0
+func (w *dnsWrapper) getOnline() bool {
+	return len(w.getA()) > 0
 }
 
 var dnsCache = map[string]*dnsWrapper{}

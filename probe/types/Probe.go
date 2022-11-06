@@ -5,3 +5,5 @@ type Probe interface {
 	GetType() string
 	GetDescription() string
 }
+
+type ProbesList []*Probe

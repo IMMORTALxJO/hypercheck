@@ -23,9 +23,11 @@ If you have some connection descriptions in your environment variables, you can 
 ...
 API_ENDPOINT=https://postman-echo.com/basic-auth
 API_USER=postman
-API_PASS=passowrd
+API_PASS=password
 ...
 ~ hypercheck --auto
+✅ DNS postman-echo.com 'A:count>0' 3 > 0
+✅ HTTP https://postman:password@postman-echo.com:443/basic-auth 'code==200' 200 == 200
 ```
 > detection magic powered by [scheme-detector](https://github.com/IMMORTALxJO/scheme-detector)
 
@@ -39,28 +41,21 @@ Manual checks are also possible:
   --fs regular ./README.md \
   --redis online localhost:6379 \
   --tcp 'online,latency<1s' 1.1.1.1:53
-
-Checking 'online' mysql://user:password@localhost:3306/database ...
-        ✅  DB online mysql://user:password@localhost:3306/database
-Checking 'online' postgres://user:password@localhost:5432/postgres?sslmode=disable ...
-        ✅  DB online postgres://user:password@localhost:5432/postgres?sslmode=disable
-Checking 'code==200,headers:count>1' https://postman-echo.com/status/200 ...
-        ✅  HTTP code==200 https://postman-echo.com/status/200
-        ✅  HTTP headers:count>1 https://postman-echo.com/status/200
-Checking 'online,A:count>1' google.com ...
-        ✅  DNS online google.com
-        ✅  DNS A:count>1 google.com
-Checking 'regular' ./README.md ...
-        ✅  FS regular ./README.md
-Checking 'online' localhost:6379 ...
-        ✅  redis online localhost:6379
-Checking 'online,latency<1s' 1.1.1.1:53 ...
-        ✅  TCP online 1.1.1.1:53
-        ✅  TCP latency<1s 1.1.1.1:53
+✅ Database mysql://user:password@localhost:3306/database 'online' is true
+✅ Database postgres://user:password@localhost:5432/postgres?sslmode=disable 'online' is true
+✅ HTTP https://postman-echo.com/status/200 'code==200' 200 == 200
+✅ HTTP https://postman-echo.com/status/200 'headers:count>1' 6 > 1
+✅ DNS google.com 'online' is true
+✅ DNS google.com 'A:count>1' 2 > 1
+✅ FileSystem ./README.md
+✅ Redis localhost:6379 'online' is true
+✅ TCP 1.1.1.1:53 'online' is true
+✅ TCP 1.1.1.1:53 'latency<1s' 0 < 1
 ```
 
 ### Usage
 ```
+~ hypercheck --help
 --auto
  Generate probes automaticaly based on current environment variables ( List )
 --fs

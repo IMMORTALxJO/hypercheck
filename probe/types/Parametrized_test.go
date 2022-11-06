@@ -43,7 +43,7 @@ func TestParametrized(t *testing.T) {
 	}), NewProbeInput("", "", "!=", "1"))
 	assert.Assert(t, !getProbeResult(generatorProbeWrapped, "does", "not", "matter", "=)"))
 
-	mapProbe := NewMapTest()
+	mapProbe := NewMapTest(false)
 	mapProbe.Add("true", NewBoolTest(true))
 	mapProbe.Add("false", NewBoolTest(false))
 	mapProbeWrapped := NewParametrized(mapProbe, NewProbeInput("true", "", "", ""))
