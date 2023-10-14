@@ -1,7 +1,7 @@
 code.cloudfoundry.org/bytefmt v0.0.0-20210608160410-67692ebc98de h1:Gm/tSRP5CPFuoMUo7NDbRMbpN3h9fBNtD6bXC+Lye9I=
 code.cloudfoundry.org/bytefmt v0.0.0-20210608160410-67692ebc98de/go.mod h1:YOakoAiZWNbkynB2dKOKvdxVehYGn3EH4UXq/i99hYg=
-github.com/IMMORTALxJO/scheme-detector v0.0.0-alpha.0.20221103150546-1c206face3ef h1:99wbFinQH+bp6stDhfx0X+06UVxqiYtZXW6yovOXjvA=
-github.com/IMMORTALxJO/scheme-detector v0.0.0-alpha.0.20221103150546-1c206face3ef/go.mod h1:FwvcXkU9ZocAiKCCtYVgSKydCpUrrMdDutPvUdgFVXI=
+github.com/IMMORTALxJO/scheme-detector v0.1.0 h1:tJy8uKMKoETmZFfIwzHQ40kO0VBpSRD5b5pUc7D8Be8=
+github.com/IMMORTALxJO/scheme-detector v0.1.0/go.mod h1:FwvcXkU9ZocAiKCCtYVgSKydCpUrrMdDutPvUdgFVXI=
 github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d h1:Byv0BzEl3/e6D5CLfI0j/7hiIEtvGVFPCZ7Ei2oq8iQ=
 github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d/go.mod h1:WaHUgvxTVq04UNunO+XhnAqY/wQc+bxr74GqbsZ/Jqw=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

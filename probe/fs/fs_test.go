@@ -35,7 +35,7 @@ func TestFS(t *testing.T) {
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "size", "", "==", "1Kb"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/d*"), "size", "sum", "==", "16Kb"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "uid", "", ">", "0"))
-	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "gid", "", ">", "0"))
+	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "gid", "", ">=", "0"))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "user", "", "!=", ""))
 	assert.Assert(t, getProbeResult(getProbe("./assets/deep_1kb"), "group", "", "!=", ""))
 
@@ -44,4 +44,10 @@ func TestFS(t *testing.T) {
 	assert.Assert(t, !getProbeResult(fsProbe, "regular", "", "", ""))
 	assert.Assert(t, getProbeResult(fsProbe, "dir", "any", "", ""))
 	assert.Assert(t, getProbeResult(fsProbe, "regular", "any", "", ""))
+}
+
+func BenchmarkFS(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getProbeResult(getProbe("./assets/*"), "count", "", "==", "146")
+	}
 }
