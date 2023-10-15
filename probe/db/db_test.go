@@ -55,3 +55,15 @@ func TestMysql(t *testing.T) {
 	assert.Assert(t, !getProbeResult(getProbe("mysql://user:password@localhost:8081/database"), "online", "", "", ""))
 
 }
+
+func BenchmarkMysql(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getProbeResult(getProbe("mysql://user:password@localhost:3306/database"), "online", "", "", "")
+	}
+}
+
+func BenchmarkPostgres(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getProbeResult(getProbe("postgres://user:password@localhost:5432/postgres?sslmode=disable"), "online", "", "", "")
+	}
+}

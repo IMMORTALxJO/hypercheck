@@ -36,3 +36,9 @@ func TestRedis(t *testing.T) {
 	assert.Assert(t, !getProbeResult(getProbe("localhost:8081"), "online", "", "", ""))
 
 }
+
+func BenchmarkRedis(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getProbeResult(getProbe("localhost:6379"), "online", "", "", "")
+	}
+}

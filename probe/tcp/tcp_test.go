@@ -38,3 +38,9 @@ func TestTcp(t *testing.T) {
 	assert.Assert(t, !getProbeResult(getProbe("127.0.0.1:123456"), "online", "", "", ""))
 
 }
+
+func BenchmarkTcp(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		getProbeResult(getProbe("127.0.0.1:8080"), "online", "", "", "")
+	}
+}

@@ -25,19 +25,19 @@ func getProbeMsg(probe types.Probe) string {
 
 func TestAutoProbeHTTP(t *testing.T) {
 	os.Clearenv()
-	os.Setenv("API_URL", "https://postman:password@postman-echo.com/basic-auth")
+	t.Setenv("API_URL", "https://postman:password@postman-echo.com/basic-auth")
 	assert.Assert(t, getProbeResult(getProbe()))
 }
 
 func TestAutoProbeRedis(t *testing.T) {
 	os.Clearenv()
-	os.Setenv("DB_HOST", "localhost")
-	os.Setenv("DB_PORT", "6379")
+	t.Setenv("DB_HOST", "localhost")
+	t.Setenv("DB_PORT", "6379")
 	assert.Assert(t, getProbeResult(getProbe()))
 }
 
 func TestAutoProbeDB(t *testing.T) {
 	os.Clearenv()
-	os.Setenv("DB_HOST", "postgres://user:password@localhost:5432/postgres?sslmode=disable")
+	t.Setenv("DB_HOST", "postgres://user:password@localhost:5432/postgres?sslmode=disable")
 	assert.Assert(t, getProbeResult(getProbe()))
 }
