@@ -9,21 +9,29 @@ import (
 )
 
 func main() {
-	for os.Args[0] == "hypercheck" {
-		os.Args = os.Args[1:]
-	}
-	if len(os.Args) == 0 {
+	if len(os.Args) == 1 {
 		fmt.Println("No command specified")
 		os.Exit(1)
 	}
 	hypercheck := probe.New()
-	for _, arg := range os.Args[1:] {
-		if arg == "-v" {
+	queries := []string{}
+	// Parse arguments
+	// -q -- add next arg to queries
+	// --tcp -- add next arg to hypercheck as tcp driverName
+
+	for i := 1; i < len(os.Args); i++ {
+		if os.Args[i] == "--tcp" {
+			log.Debugf("cli: Adding tcp driver %s", os.Args[i+1])
+			hypercheck.Add("tcp", os.Args[i+1])
+			i++
+		} else if os.Args[i] == "-v" {
 			log.SetLevel(log.DebugLevel)
 		} else {
-			hypercheck.Add("tcp", arg)
+			log.Debugf("cli: Adding query %s", os.Args[i])
+			queries = append(queries, os.Args[i])
 		}
 	}
 	hypercheck.Run()
+	hypercheck.Exec(queries)
 	hypercheck.Validate()
 }

@@ -1,7 +1,6 @@
 package probe
 
 import (
-	"database/sql"
 	"fmt"
 	"strings"
 
@@ -11,8 +10,10 @@ import (
 
 	t "hypercheck/probe/types"
 
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 type Probe struct {
@@ -61,11 +62,20 @@ func (p *Probe) Validate() {
 	}
 }
 
+func (p *Probe) Exec(batch []string) {
+	// print queries result
+	for _, query := range batch {
+		log.Debugf("executing query %s", query)
+		p.db.Exec(query)
+	}
+}
+
 func New() *Probe {
-	ramdb, _ := sql.Open("ramsql", "hypercheck")
-	db, _ := gorm.Open(postgres.New(postgres.Config{
-		Conn: ramdb,
-	}), &gorm.Config{})
+	// db, _ := gorm.Open(postgres.New(postgres.Config{
+	// 	Conn: ramdb,
+	// }), &gorm.Config{})
+
+	db, _ := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 
 	return &Probe{
 		db: db,

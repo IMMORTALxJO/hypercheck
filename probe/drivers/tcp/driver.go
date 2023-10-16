@@ -6,7 +6,6 @@ import (
 
 	t "hypercheck/probe/types"
 
-	_ "github.com/proullon/ramsql/driver"
 	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
