@@ -2,9 +2,8 @@ package probe
 
 import (
 	"fmt"
-	"strings"
 
-	"hypercheck/probe/drivers/tcp"
+	"hypercheck/probe/items/tcp"
 
 	log "github.com/sirupsen/logrus"
 
@@ -17,12 +16,12 @@ import (
 )
 
 type Probe struct {
-	db      *gorm.DB
-	drivers map[string]*DriverLink
+	db     *gorm.DB
+	tables map[string]ItemLink
 }
 
-type DriverLink struct {
-	link        t.Driver
+type ItemLink struct {
+	newItem     func(input string) t.Item
 	initialized bool
 }
 
@@ -31,35 +30,35 @@ func (p *Probe) GetDB() *gorm.DB {
 }
 
 func (p *Probe) Add(driverName string, input string) {
-	if driver, ok := p.drivers[driverName]; ok {
+	if driver, ok := p.tables[driverName]; ok {
+		item := driver.newItem(input)
 		if !driver.initialized {
-			driver.link.Initialize(p.db)
+			p.db.AutoMigrate(item)
 			driver.initialized = true
 		}
-		driver.link.GenerateProbe(p.db, input)
+		item.Enrich()
+		p.db.Save(item)
 	} else {
 		panic("unknown driver " + driverName)
 	}
 }
 
-func (p *Probe) Run() {
-	for _, driver := range p.drivers {
-		driver.link.Enrich(p.db)
-	}
-}
-
-func (p *Probe) Validate() {
-	for _, driver := range p.drivers {
-		driverName := strings.ToUpper(driver.link.Name())
-		for _, item := range driver.link.GetItems(p.db) {
+func (p *Probe) Validate() int {
+	exitCode := 0
+	for driverName, _ := range p.tables {
+		var items []tcp.Item
+		p.db.Find(&items)
+		for _, item := range items {
 			log.Debugf("%s probe: %+v", driverName, item)
 			emoji := "✅"
 			if item.IsFailed() {
 				emoji = "❌"
+				exitCode = 1
 			}
 			fmt.Printf("%s %s %s\n", emoji, driverName, item.GetMessage())
 		}
 	}
+	return exitCode
 }
 
 func (p *Probe) Exec(batch []string) {
@@ -71,18 +70,13 @@ func (p *Probe) Exec(batch []string) {
 }
 
 func New() *Probe {
-	// db, _ := gorm.Open(postgres.New(postgres.Config{
-	// 	Conn: ramdb,
-	// }), &gorm.Config{})
-
 	db, _ := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
 
 	return &Probe{
 		db: db,
-		drivers: map[string]*DriverLink{
+		tables: map[string]ItemLink{
 			"tcp": {
-				link:        &tcp.Driver{},
-				initialized: false,
+				newItem: tcp.NewItem,
 			},
 		},
 	}

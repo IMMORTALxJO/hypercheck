@@ -31,7 +31,7 @@ func main() {
 			queries = append(queries, os.Args[i])
 		}
 	}
-	hypercheck.Run()
 	hypercheck.Exec(queries)
-	hypercheck.Validate()
+	exitCode := hypercheck.Validate()
+	os.Exit(exitCode)
 }
