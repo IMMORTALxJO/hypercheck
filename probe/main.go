@@ -3,6 +3,7 @@ package probe
 import (
 	"fmt"
 
+	"hypercheck/probe/items/dns"
 	"hypercheck/probe/items/tcp"
 
 	log "github.com/sirupsen/logrus"
@@ -17,7 +18,7 @@ import (
 
 type Probe struct {
 	db     *gorm.DB
-	tables map[string]ItemLink
+	tables map[string]*ItemLink
 }
 
 type ItemLink struct {
@@ -45,9 +46,30 @@ func (p *Probe) Add(driverName string, input string) {
 
 func (p *Probe) Validate() int {
 	exitCode := 0
-	for driverName, _ := range p.tables {
-		var items []tcp.Item
-		p.db.Find(&items)
+	for driverName, driver := range p.tables {
+		log.Debugf("validating %s", driverName)
+		if !driver.initialized {
+			log.Debugf("skipping %s", driverName)
+			continue
+		}
+		var items []t.Item
+		switch driverName {
+		case "tcp":
+			var tcpItems []tcp.Item
+			p.db.Find(&tcpItems)
+			items = make([]t.Item, len(tcpItems))
+			for i, tcpItem := range tcpItems {
+				items[i] = t.Item(&tcpItem) // Преобразование tcp.Item в t.Item
+			}
+		case "dns":
+			var dnsItems []dns.Item
+			p.db.Find(&dnsItems)
+			items = make([]t.Item, len(dnsItems))
+			for i, dnsItem := range dnsItems {
+				items[i] = t.Item(&dnsItem) // Преобразование dns.Item в t.Item
+			}
+		}
+		log.Debugf("found %d items for %s", len(items), driverName)
 		for _, item := range items {
 			log.Debugf("%s probe: %+v", driverName, item)
 			emoji := "✅"
@@ -74,9 +96,12 @@ func New() *Probe {
 
 	return &Probe{
 		db: db,
-		tables: map[string]ItemLink{
+		tables: map[string]*ItemLink{
 			"tcp": {
 				newItem: tcp.NewItem,
+			},
+			"dns": {
+				newItem: dns.NewItem,
 			},
 		},
 	}

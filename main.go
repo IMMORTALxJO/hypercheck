@@ -24,6 +24,10 @@ func main() {
 			log.Debugf("cli: Adding tcp driver %s", os.Args[i+1])
 			hypercheck.Add("tcp", os.Args[i+1])
 			i++
+		} else if os.Args[i] == "--dns" {
+			log.Debugf("cli: Adding dns driver %s", os.Args[i+1])
+			hypercheck.Add("dns", os.Args[i+1])
+			i++
 		} else if os.Args[i] == "-v" {
 			log.SetLevel(log.DebugLevel)
 		} else {
