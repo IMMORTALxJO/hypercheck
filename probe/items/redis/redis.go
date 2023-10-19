@@ -1,15 +1,16 @@
-package tcp
+package redis
 
 import (
 	"fmt"
 	t "hypercheck/probe/types"
-	"net"
+	"strings"
 	"time"
 
+	"github.com/gomodule/redigo/redis"
 	log "github.com/sirupsen/logrus"
 )
 
-const tableName = "tcp"
+const tableName = "redis"
 const checkIsUpMessage = "online"
 const notCheckedMessage = "not checked"
 
@@ -19,6 +20,7 @@ type Item struct {
 	Failed      bool
 	LatencyNano uint64
 	Message     string
+	Value       string
 }
 
 func (Item) TableName() string {
@@ -37,28 +39,34 @@ func (i *Item) Enrich() {
 	i.Checked = true
 	i.Message = checkIsUpMessage
 	i.Failed = false
-	netd := net.Dialer{Timeout: time.Duration(1) * time.Second}
-	startTime := time.Now()
-	log.Debugf("checking TCP for %s", i.Address)
-	conn, err := netd.Dial("tcp", i.Address)
+	conn, err := redis.Dial("tcp", i.Address)
 	if err != nil {
 		i.Message = err.Error()
-		log.Debugf("TCP for %s failed: %s", i.Address, err)
-		i.Failed = true
-	}
-	i.LatencyNano = uint64(time.Since(startTime).Nanoseconds())
-	log.Debugf("TCP for %s took %d nanoseconds", i.Address, i.LatencyNano)
-	if err != nil {
-		i.Message = err.Error()
+		log.Debugf("redis for %s failed: %s", i.Address, err)
 		i.Failed = true
 		return
 	}
-	conn.Close()
+	answer, err := redis.DoWithTimeout(conn, time.Second, "ping")
+	if err != nil {
+		i.Message = err.Error()
+		log.Debugf("redis for %s failed: %s", i.Address, err)
+		i.Failed = true
+		return
+	}
+	log.Debugf("redis answer for %s is %s", i.Address, answer)
+	if answer != "PONG" {
+		i.Message = "ping answer is not PONG"
+		i.Failed = true
+	}
 }
 
 func NewItem(address string) t.Item {
+	addressWithPort := address
+	if !strings.Contains(address, ":") {
+		addressWithPort = address + ":6379"
+	}
 	return &Item{
-		Address: address,
+		Address: addressWithPort,
 		Message: notCheckedMessage,
 	}
 }

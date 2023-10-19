@@ -10,7 +10,7 @@ import (
 )
 
 const tableName = "dns"
-const checkIsUpMessage = "is exists"
+const checkIsUpMessage = "record exists"
 const notCheckedMessage = "not checked"
 
 type Item struct {

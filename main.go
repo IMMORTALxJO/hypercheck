@@ -15,18 +15,18 @@ func main() {
 	}
 	hypercheck := probe.New()
 	queries := []string{}
-	// Parse arguments
-	// -q -- add next arg to queries
-	// --tcp -- add next arg to hypercheck as tcp driverName
-
 	for i := 1; i < len(os.Args); i++ {
 		if os.Args[i] == "--tcp" {
-			log.Debugf("cli: Adding tcp driver %s", os.Args[i+1])
+			log.Debugf("cli: Adding tcp check %s", os.Args[i+1])
 			hypercheck.Add("tcp", os.Args[i+1])
 			i++
 		} else if os.Args[i] == "--dns" {
-			log.Debugf("cli: Adding dns driver %s", os.Args[i+1])
+			log.Debugf("cli: Adding dns check %s", os.Args[i+1])
 			hypercheck.Add("dns", os.Args[i+1])
+			i++
+		} else if os.Args[i] == "--redis" {
+			log.Debugf("cli: Adding redis check %s", os.Args[i+1])
+			hypercheck.Add("redis", os.Args[i+1])
 			i++
 		} else if os.Args[i] == "-v" {
 			log.SetLevel(log.DebugLevel)

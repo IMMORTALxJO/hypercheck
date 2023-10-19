@@ -12,6 +12,7 @@ require (
 
 require (
 	github.com/foxcpp/go-mockdns v1.0.0 // indirect
+	github.com/gomodule/redigo v1.8.9 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect

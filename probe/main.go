@@ -2,8 +2,10 @@ package probe
 
 import (
 	"fmt"
+	"strings"
 
 	"hypercheck/probe/items/dns"
+	"hypercheck/probe/items/redis"
 	"hypercheck/probe/items/tcp"
 
 	log "github.com/sirupsen/logrus"
@@ -49,7 +51,7 @@ func (p *Probe) Validate() int {
 	for driverName, driver := range p.tables {
 		log.Debugf("validating %s", driverName)
 		if !driver.initialized {
-			log.Debugf("skipping %s", driverName)
+			log.Debugf("%s is not initialized - skipped", driverName)
 			continue
 		}
 		var items []t.Item
@@ -59,17 +61,24 @@ func (p *Probe) Validate() int {
 			p.db.Find(&tcpItems)
 			items = make([]t.Item, len(tcpItems))
 			for i, tcpItem := range tcpItems {
-				items[i] = t.Item(&tcpItem) // Преобразование tcp.Item в t.Item
+				items[i] = t.Item(&tcpItem)
 			}
 		case "dns":
 			var dnsItems []dns.Item
 			p.db.Find(&dnsItems)
 			items = make([]t.Item, len(dnsItems))
 			for i, dnsItem := range dnsItems {
-				items[i] = t.Item(&dnsItem) // Преобразование dns.Item в t.Item
+				items[i] = t.Item(&dnsItem)
+			}
+		case "redis":
+			var redisItems []redis.Item
+			p.db.Find(&redisItems)
+			items = make([]t.Item, len(redisItems))
+			for i, redisItem := range redisItems {
+				items[i] = t.Item(&redisItem)
 			}
 		}
-		log.Debugf("found %d items for %s", len(items), driverName)
+		log.Debugf("found %d items of %s", len(items), driverName)
 		for _, item := range items {
 			log.Debugf("%s probe: %+v", driverName, item)
 			emoji := "✅"
@@ -77,7 +86,7 @@ func (p *Probe) Validate() int {
 				emoji = "❌"
 				exitCode = 1
 			}
-			fmt.Printf("%s %s %s\n", emoji, driverName, item.GetMessage())
+			fmt.Printf("%s %s %s\n", emoji, strings.ToUpper(driverName), item.GetMessage())
 		}
 	}
 	return exitCode
@@ -102,6 +111,9 @@ func New() *Probe {
 			},
 			"dns": {
 				newItem: dns.NewItem,
+			},
+			"redis": {
+				newItem: redis.NewItem,
 			},
 		},
 	}
